@@ -1,0 +1,52 @@
+
+spring:
+  application:
+    name: BE_Barber
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/booking_Barber?serverTimezone=UTC
+    username: root
+    password: root
+  jpa:
+    properties:
+      hibernate.format_sql: true
+      hibernate.show_sql: true
+      hibernate.enable_lazy_load_no_trans: true
+      hibernate.current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+      hibernate.jdbc.time_zone: UTC
+    hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: suhoang0971@gmail.com
+    password: 'rlpd avau pkpc psub'
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      file-size-threshold: 10MB
+      max-request-size: 10MB
+
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ss
+    time-zone: UTC
+  messages:
+    basename: messages-vn
+    encoding: UTF-8
+
+  jvm:
+    arguments: -Duser.timezone=UTC
+
+green:
+  jwt:
+    expiration: ${GREEN_JWT_EXPIRATION:6000000}
+    secretKey: ${GREEN_JWT_SECRET_KEY:GREENACADEMY_SECRET_KEY}
+
+server:
+  port: 8181
