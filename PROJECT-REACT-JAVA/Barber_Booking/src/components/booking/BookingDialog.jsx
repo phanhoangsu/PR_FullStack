@@ -15,8 +15,8 @@ import {
   bookAppointment,
   resetAppointmentState,
 } from "../../reduxToolKist/appointments/appointmentSlice";
-import FormItem from "antd/es/form/FormItem";
 import { getAllStaff } from "../../reduxToolKist/staff/staffSlice";
+import { AuthService } from "../../reduxToolKist/api/AuthService";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -26,29 +26,37 @@ const BookingDialog = ({ open, onClose, serviceId, staffId, serviceName }) => {
   const { loading, success, error } = useSelector(
     (state) => state.appointments
   );
-  const [form] = Form.useForm();
   const { staffs } = useSelector((state) => state.staff);
-  const { user } = useSelector((state) => state.auth);
-
+  const { token, profile } = useSelector((state) => state.auth);
   // const user = useSelector((state) => state.auth.user);
-  console.log("User from Redux:", user);
+
+  const [form] = Form.useForm();
 
   useEffect(() => {
-    console.log("SessionStorage User:", sessionStorage.getItem("User"));
-  }, []);
+    if (open && token) {
+      // Gọi API lấy profile
+      AuthService.getRole(token)
+        .then((res) => {
+          const { fullName, phoneNumber, email } = res.data;
+          form.setFieldsValue({
+            fullName,
+            phoneNumber,
+            email,
+          });
+        })
+        .catch(() => {
+          message.error("Không lấy được thông tin người dùng");
+        });
+    }
+  }, [open, token]);
 
+  // staff
   useEffect(() => {
-    if (user && open) {
-      form.setFieldsValue({
-        fullName: user.fullName,
-        phoneNumber: user.phoneNumber,
-        email: user.email,
+    if (open) {
+      dispatch(getAllStaff()).then((res) => {
+        // console.log("🔥 Dữ liệu sau dispatch:", res.payload); // Check data ở đây
       });
     }
-  }, [user, open]);
-
-  useEffect(() => {
-    if (open) dispatch(getAllStaff());
   }, [open, dispatch]);
 
   const onFinish = (values) => {
@@ -58,7 +66,6 @@ const BookingDialog = ({ open, onClose, serviceId, staffId, serviceName }) => {
         return;
       }
 
-      // Đảm bảo các giá trị đều là Dayjs object
       const date = dayjs(values.date);
       const startTime = dayjs(values.startTime);
 
@@ -72,6 +79,7 @@ const BookingDialog = ({ open, onClose, serviceId, staffId, serviceName }) => {
         message.error("Thời gian không hợp lệ");
         return;
       }
+
       const payload = {
         phoneNumber: values.phoneNumber,
         fullName: values.fullName,
@@ -79,7 +87,6 @@ const BookingDialog = ({ open, onClose, serviceId, staffId, serviceName }) => {
         serviceId,
         staffId: values.staffId || null,
         startTime: start.format("YYYY-MM-DD HH:mm:ss"),
-
         notes: values.notes,
       };
 
@@ -101,7 +108,7 @@ const BookingDialog = ({ open, onClose, serviceId, staffId, serviceName }) => {
       message.error(error);
       dispatch(resetAppointmentState());
     }
-  }, [success, error]);
+  }, [success, error, dispatch, form, onClose]);
 
   return (
     <Modal
@@ -119,6 +126,10 @@ const BookingDialog = ({ open, onClose, serviceId, staffId, serviceName }) => {
         >
           <Input placeholder="Nguyễn Văn A" />
         </Form.Item>
+
+        {/* <Form.Item name="fullName" label="Họ và tên">
+          <Input value={user?.fullName || "Khách hàng mới"} disabled />
+        </Form.Item> */}
 
         <Form.Item
           name="phoneNumber"
@@ -158,11 +169,10 @@ const BookingDialog = ({ open, onClose, serviceId, staffId, serviceName }) => {
           <TimePicker format="HH:mm" style={{ width: "100%" }} />
         </Form.Item>
 
-        {/* chọn nhân viên  có thể bỏ trống  */}
-        <FormItem name="staffId" label="Chọn nhân viên (có thể bỏ trống)">
+        <Form.Item name="staffId" label="Chọn nhân viên (có thể bỏ trống)">
           <Select
             allowClear
-            placeholder="-- không chọn để hệ thống chỉ định nhân viên -- "
+            placeholder="-- không chọn để hệ thống chỉ định nhân viên --"
           >
             {Array.isArray(staffs) && staffs.length > 0 ? (
               staffs.map((staff) => (
@@ -171,10 +181,10 @@ const BookingDialog = ({ open, onClose, serviceId, staffId, serviceName }) => {
                 </Option>
               ))
             ) : (
-              <Option disabled> Không có nhân viên nào</Option>
+              <Option disabled>Không có nhân viên nào</Option>
             )}
           </Select>
-        </FormItem>
+        </Form.Item>
 
         <Form.Item name="notes" label="Ghi chú">
           <TextArea rows={3} placeholder="Ghi chú thêm..." />

@@ -10,7 +10,8 @@ import {
 
 export const getAllStaff = createAsyncThunk("staff/getAll", async () => {
   const res = await fetchAllStaff();
-  return res.data.dataError; // ✅ Giả sử API trả về trong dataError
+  // console.log("✅ API trả về:", res.data); // THÊM DÒNG NÀY
+  return res.data; // ✅ Giả sử API trả về trong dataError
 });
 
 export const addStaff = createAsyncThunk("staff/add", async (staffData) => {

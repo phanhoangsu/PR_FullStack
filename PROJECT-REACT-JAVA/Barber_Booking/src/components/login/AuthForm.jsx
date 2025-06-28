@@ -110,6 +110,14 @@ const AuthForm = () => {
         <TabPane tab="Đăng ký" key="2">
           <Form form={registerForm} layout="vertical" onFinish={onRegister}>
             <Form.Item
+              label="Họ và tên"
+              name="fullName"
+              rules={[{ required: true, message: "Vui lòng nhập họ và tên" }]}
+            >
+              <Input placeholder="Nhập họ và tên" />
+            </Form.Item>
+
+            <Form.Item
               label="Tên đăng nhập"
               name="username"
               rules={[

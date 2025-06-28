@@ -10,13 +10,19 @@ export const login = createAsyncThunk(
 
       // gọi /profile để lấy roles sau khi đăng nhập
       const profileRes = await AuthService.getRole(token); // api này cần định nghĩa nếu chưa có
-      const roles = profileRes.data.roles || [];
+      // const roles = profileRes.data.roles || [];
+
+      const profile = profileRes.data;
+
+      const roles = profile.roles || [];
 
       sessionStorage.setItem("Token", res.data.token);
       sessionStorage.setItem("Expired", res.data.expired);
       sessionStorage.setItem("Role", JSON.stringify(roles));
 
-      return { token, expired, roles };
+      sessionStorage.setItem("UserProfile", JSON.stringify(profile));
+
+      return { token, expired, roles, profile };
     } catch (err) {
       return rejectWithValue(err.response?.data || "Đăng nhập thất bại");
     }
@@ -42,6 +48,8 @@ const authSlice = createSlice({
     expired: sessionStorage.getItem("Expired") || null,
     roles: JSON.parse(sessionStorage.getItem("Role") || "[]"),
 
+    profile: JSON.parse(sessionStorage.getItem("UserProfile") || "null"),
+
     loading: false,
     error: null,
     success: null,
@@ -55,6 +63,8 @@ const authSlice = createSlice({
       state.token = null;
       state.expired = null;
       state.roles = [];
+
+      state.profile = null;
     },
     clearMessage: (state) => {
       state.error = null;
@@ -73,6 +83,8 @@ const authSlice = createSlice({
         state.token = action.payload.token;
         state.expired = action.payload.expired;
         state.roles = action.payload.roles;
+        state.profile = action.payload.profile;
+
         state.success = "Đăng nhập thành công";
       })
       .addCase(register.fulfilled, (state, action) => {

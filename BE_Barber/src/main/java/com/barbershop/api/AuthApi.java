@@ -143,9 +143,6 @@ public class AuthApi {
         return ResponseEntity.ok(response);
     }
 
-
-
-
     // đăng kí toàn khoản
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
@@ -182,7 +179,7 @@ public class AuthApi {
             // tạo customer (email liên kết user)
             Customer customer = new Customer();
             customer.setPhoneNumber(request.getPhoneNumber());
-            customer.setFullName("Khách hàng mới");
+            customer.setFullName(request.getFullName());
             customer.setEmail(request.getEmail());
             customer.setUser(userEntity);
 
