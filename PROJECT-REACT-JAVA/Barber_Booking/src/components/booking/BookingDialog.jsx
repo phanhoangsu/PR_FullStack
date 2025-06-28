@@ -1,98 +1,3 @@
-// import React, { useState } from "react";
-// import { Button, Input, Form, Modal } from "antd";
-// import TextArea from "antd/es/input/TextArea";
-
-// const BookingDialog = ({ serviceName, children }) => {
-//   const [form] = Form.useForm();
-//   const [open, setOpen] = useState(false);
-
-//   const handleFinish = (values) => {
-//     const data = {
-//       ...values,
-//       serviceName,
-//       startTime: values.startTime.format(),
-//       endTime: values.endTime.format(),
-//     };
-//     console.log("Booking data:", data);
-//     Modal.success({
-//       title: "Thành công",
-//       content: `Đặt lịch thành công cho dịch vụ: ${serviceName}`,
-//     });
-//     form.resetFields();
-//     setOpen(false);
-//   };
-
-//   return (
-//     <>
-//       <span onClick={() => setOpen(true)}>{children}</span>
-//       <Modal
-//         title={`Đặt Lịch - ${serviceName}`}
-//         open={open}
-//         onCancel={() => setOpen(false)}
-//         footer={null}
-//       >
-//         <Form form={form} layout="vertical" onFinish={handleFinish}>
-//           <Form.Item
-//             name="customerName"
-//             label="Tên khách hàng *"
-//             rules={[
-//               { required: true, message: "Vui lòng nhập tên khách hàng" },
-//             ]}
-//           >
-//             <Input placeholder="Nhập tên của bạn" />
-//           </Form.Item>
-
-//           <Form.Item
-//             name="phoneNumber"
-//             label="Số điện thoại *"
-//             rules={[
-//               { required: true, message: "Vui lòng nhập số điện thoại" },
-//               {
-//                 pattern: /^[0-9]{10,11}$/,
-//                 message: "Số điện thoại không hợp lệ",
-//               },
-//             ]}
-//           >
-//             <Input placeholder="Nhập số điện thoại" />
-//           </Form.Item>
-
-//           <Form.Item
-//             name="startTime"
-//             label="Thời gian bắt đầu *"
-//             rules={[
-//               { required: true, message: "Vui lòng chọn thời gian bắt đầu" },
-//             ]}
-//           >
-//             <Input type="datetime-local" />
-//           </Form.Item>
-
-//           <Form.Item
-//             name="endTime"
-//             label="Thời gian kết thúc *"
-//             rules={[
-//               { required: true, message: "Vui lòng chọn thời gian kết thúc" },
-//             ]}
-//           >
-//             <Input type="datetime-local" />
-//           </Form.Item>
-
-//           <Form.Item name="note" label="Ghi chú">
-//             <TextArea placeholder="Thêm ghi chú (không bắt buộc)" rows={3} />
-//           </Form.Item>
-
-//           <Form.Item className="flex justify-end">
-//             <Button type="primary" htmlType="submit" danger>
-//               Xác nhận đặt lịch
-//             </Button>
-//           </Form.Item>
-//         </Form>
-//       </Modal>
-//     </>
-//   );
-// };
-
-// export default BookingDialog;
-
 import React, { useState, useEffect } from "react";
 import {
   Modal,
@@ -110,36 +15,79 @@ import {
   bookAppointment,
   resetAppointmentState,
 } from "../../reduxToolKist/appointments/appointmentSlice";
+import FormItem from "antd/es/form/FormItem";
+import { getAllStaff } from "../../reduxToolKist/staff/staffSlice";
 
 const { TextArea } = Input;
+const { Option } = Select;
 
-const BookingDialog = ({ open, onClose, serviceId, staffId }) => {
+const BookingDialog = ({ open, onClose, serviceId, staffId, serviceName }) => {
   const dispatch = useDispatch();
   const { loading, success, error } = useSelector(
     (state) => state.appointments
   );
-
   const [form] = Form.useForm();
+  const { staffs } = useSelector((state) => state.staff);
+  const { user } = useSelector((state) => state.auth);
+
+  // const user = useSelector((state) => state.auth.user);
+  console.log("User from Redux:", user);
+
+  useEffect(() => {
+    console.log("SessionStorage User:", sessionStorage.getItem("User"));
+  }, []);
+
+  useEffect(() => {
+    if (user && open) {
+      form.setFieldsValue({
+        fullName: user.fullName,
+        phoneNumber: user.phoneNumber,
+        email: user.email,
+      });
+    }
+  }, [user, open]);
+
+  useEffect(() => {
+    if (open) dispatch(getAllStaff());
+  }, [open, dispatch]);
 
   const onFinish = (values) => {
-    const start = dayjs(
-      `${values.date.format("YYYY-MM-DD")} ${values.startTime.format("HH:mm")}`
-    );
-    const end = dayjs(
-      `${values.date.format("YYYY-MM-DD")} ${values.endTime.format("HH:mm")}`
-    );
+    try {
+      if (!values.date || !values.startTime) {
+        message.error("Vui lòng chọn đầy đủ ngày và giờ bắt đầu ");
+        return;
+      }
 
-    const payload = {
-      phoneNumber: values.phoneNumber,
-      fullName: values.fullName,
-      serviceId,
-      staffId,
-      startTime: start.toISOString(),
-      endTime: end.toISOString(),
-      notes: values.notes,
-    };
+      // Đảm bảo các giá trị đều là Dayjs object
+      const date = dayjs(values.date);
+      const startTime = dayjs(values.startTime);
 
-    dispatch(bookAppointment(payload));
+      const start = date
+        .hour(startTime.hour())
+        .minute(startTime.minute())
+        .second(0)
+        .millisecond(0);
+
+      if (!start.isValid()) {
+        message.error("Thời gian không hợp lệ");
+        return;
+      }
+      const payload = {
+        phoneNumber: values.phoneNumber,
+        fullName: values.fullName,
+        email: values.email,
+        serviceId,
+        staffId: values.staffId || null,
+        startTime: start.format("YYYY-MM-DD HH:mm:ss"),
+
+        notes: values.notes,
+      };
+
+      dispatch(bookAppointment(payload));
+    } catch (e) {
+      console.error("Lỗi khi tạo dữ liệu booking:", e);
+      message.error("Đã xảy ra lỗi khi xử lý thời gian đặt lịch");
+    }
   };
 
   useEffect(() => {
@@ -157,7 +105,7 @@ const BookingDialog = ({ open, onClose, serviceId, staffId }) => {
 
   return (
     <Modal
-      title="Đặt lịch hẹn"
+      title={`Đặt lịch - ${serviceName}`}
       open={open}
       onCancel={onClose}
       footer={null}
@@ -181,11 +129,25 @@ const BookingDialog = ({ open, onClose, serviceId, staffId }) => {
         </Form.Item>
 
         <Form.Item
+          name="email"
+          label="Email"
+          rules={[{ type: "email", message: "Email không hợp lệ" }]}
+        >
+          <Input placeholder="example@gmail.com (không bắt buộc)" />
+        </Form.Item>
+
+        <Form.Item
           name="date"
           label="Chọn ngày"
           rules={[{ required: true, message: "Chọn ngày hẹn" }]}
         >
-          <DatePicker format="DD/MM/YYYY" style={{ width: "100%" }} />
+          <DatePicker
+            format="DD/MM/YYYY"
+            style={{ width: "100%" }}
+            disabledDate={(current) =>
+              current && current < dayjs().startOf("day")
+            }
+          />
         </Form.Item>
 
         <Form.Item
@@ -196,13 +158,23 @@ const BookingDialog = ({ open, onClose, serviceId, staffId }) => {
           <TimePicker format="HH:mm" style={{ width: "100%" }} />
         </Form.Item>
 
-        <Form.Item
-          name="endTime"
-          label="Giờ kết thúc"
-          rules={[{ required: true, message: "Chọn giờ kết thúc" }]}
-        >
-          <TimePicker format="HH:mm" style={{ width: "100%" }} />
-        </Form.Item>
+        {/* chọn nhân viên  có thể bỏ trống  */}
+        <FormItem name="staffId" label="Chọn nhân viên (có thể bỏ trống)">
+          <Select
+            allowClear
+            placeholder="-- không chọn để hệ thống chỉ định nhân viên -- "
+          >
+            {Array.isArray(staffs) && staffs.length > 0 ? (
+              staffs.map((staff) => (
+                <Option key={staff.id} value={staff.id}>
+                  {staff.fullName} ({staff.role})
+                </Option>
+              ))
+            ) : (
+              <Option disabled> Không có nhân viên nào</Option>
+            )}
+          </Select>
+        </FormItem>
 
         <Form.Item name="notes" label="Ghi chú">
           <TextArea rows={3} placeholder="Ghi chú thêm..." />

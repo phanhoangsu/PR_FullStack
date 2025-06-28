@@ -13,32 +13,37 @@ const ResetPasswordPage = () => {
   const [validToken, setValidToken] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // lấy token tử URL
+  // Lấy token từ URL
   const searchParams = new URLSearchParams(location.search);
   const token = searchParams.get("token");
 
-  // kiểm tra token họp lệ khi load Page
+  // Kiểm tra token hợp lệ khi load page
   useEffect(() => {
     const checkToken = async () => {
       try {
         const res = await axios.get(
           `http://localhost:8181/api/auth/check-reset-token?token=${token}`
         );
-        if (res.data === "Token họp lệ") {
+
+        // Kiểm tra phản hồi từ API
+        if (res.data === "Token hợp lệ") {
           setValidToken(true);
         } else {
-          message.error("Token không họp lệ hoặc đã hết hạn.");
+          message.error("Token không hợp lệ hoặc đã hết hạn.");
         }
       } catch (err) {
         message.error("Không thể xác minh token.");
       }
     };
-    if (token) checkToken();
-    else message.error("Không thể xác minh token.");
+
+    if (token) {
+      checkToken();
+    } else {
+      message.error("Không tìm thấy token trong liên kết.");
+    }
   }, [token]);
 
-  // gửi yêu cầu reset Password
-
+  // Gửi yêu cầu reset mật khẩu
   const onFinish = async (values) => {
     try {
       setLoading(true);
@@ -49,20 +54,27 @@ const ResetPasswordPage = () => {
         }
       );
 
-      message.success("Mật khẩu đã được ccapj nhật thành công!");
+      message.success("Mật khẩu đã được cập nhật thành công!");
       form.resetFields();
 
       setTimeout(() => {
-        navigate("/auth");
+        navigate("/login");
       }, 1500);
     } catch (err) {
-      message.error("Đặt lại mật khẩu thất bại.Vui long thử lại.");
+      message.error("Đặt lại mật khẩu thất bại. Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (!token) return <div>Không tìm thấy token trong liên kết.</div>;
+  // Không có token trong URL
+  if (!token) {
+    return (
+      <div style={{ textAlign: "center", marginTop: "5vh", color: "red" }}>
+        Không tìm thấy token trong liên kết.
+      </div>
+    );
+  }
 
   return (
     <div
@@ -71,11 +83,16 @@ const ResetPasswordPage = () => {
         margin: "auto",
         marginTop: "5vh",
         padding: "2rem",
+        border: "1px solid #f0f0f0",
+        borderRadius: "8px",
+        backgroundColor: "#fff",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
       }}
     >
       <Title level={3} style={{ textAlign: "center" }}>
         Đặt lại mật khẩu
-      </Title>{" "}
+      </Title>
+
       {validToken ? (
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Form.Item
@@ -85,8 +102,31 @@ const ResetPasswordPage = () => {
               { required: true, message: "Vui lòng nhập mật khẩu mới" },
               { min: 6, message: "Mật khẩu ít nhất 6 ký tự" },
             ]}
+            hasFeedback
           >
             <Input.Password placeholder="Nhập mật khẩu mới" />
+          </Form.Item>
+
+          <Form.Item
+            label="Xác nhận mật khẩu"
+            name="confirmPassword"
+            dependencies={["newPassword"]}
+            hasFeedback
+            rules={[
+              { required: true, message: "Vui lòng xác nhận mật khẩu" },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("newPassword") === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("Mật khẩu xác nhận không khớp")
+                  );
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="Nhập lại mật khẩu" />
           </Form.Item>
 
           <Form.Item>

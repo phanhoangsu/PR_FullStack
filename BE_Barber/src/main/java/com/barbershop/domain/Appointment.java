@@ -34,8 +34,8 @@ public class Appointment {
     @Column(name = "start_time", nullable = false)
     private Timestamp startTime;
 
-    @Column(name = "end_time", nullable = false)
-    private Timestamp endTime;
+//    @Column(name = "end_time", nullable = false)
+//    private Timestamp endTime;
 
     @ColumnDefault("'Đã đặt'")
     @Lob

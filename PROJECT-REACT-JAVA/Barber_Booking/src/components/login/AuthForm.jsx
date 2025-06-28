@@ -31,9 +31,15 @@ const AuthForm = () => {
   // Hiển thị message
   useEffect(() => {
     if (error) {
-      message.error(error.toString());
-      dispatch(clearMessage());
+      const errorMsg =
+        typeof error === "string"
+          ? error
+          : error.message ||
+            "Đăng nhập thất bại . Vui long kiểm tra lại mật khẩu hoặc tên đang nhập!";
+      message.error(errorMsg);
+      dispatch(clearMessage);
     }
+
     if (success) {
       message.success(success.toString());
       dispatch(clearMessage());
@@ -111,6 +117,20 @@ const AuthForm = () => {
               ]}
             >
               <Input placeholder="Nhập tên đăng nhập" />
+            </Form.Item>
+
+            <Form.Item
+              label="Số điện thoại"
+              name="phoneNumber"
+              rules={[
+                { required: true, message: "Vui lòng nhập số điện thoại" },
+                {
+                  pattern: /^\d{9,11}$/,
+                  message: "Số điện thoại không hợp lệ",
+                },
+              ]}
+            >
+              <Input placeholder="Nhập số điện thoại" />
             </Form.Item>
 
             <Form.Item

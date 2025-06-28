@@ -7,6 +7,7 @@ import com.barbershop.model.UserAdapter;
 import com.barbershop.model.request.RegisterRequest;
 import com.barbershop.model.request.ResetPasswordRequest;
 import com.barbershop.model.request.TokenRequest;
+import com.barbershop.model.response.CustomerResponse;
 import com.barbershop.model.response.TokenResponse;
 import com.barbershop.repository.CustomerRepository;
 import com.barbershop.repository.RoleRepository;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -73,6 +75,9 @@ public class AuthApi {
             tokenResponse.setExpired(new Date().getTime() + jwtUtils.getExpiration());
             return new ResponseEntity<>(tokenResponse, HttpStatus.OK);
 
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Sai tên đăng nhập hoặc mật khẩu");
+
         } catch (Exception e) {
             logger.error("getToken error", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -80,24 +85,66 @@ public class AuthApi {
         }
     }
 
-    // lấy thông tin người dùng
+//    // lấy thông tin người dùng
+//    @GetMapping("/profile")
+//    public ResponseEntity<?> getProfile(@AuthenticationPrincipal UserAdapter userDetails) {
+//        if (userDetails == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
+//        }
+//
+//        String username = userDetails.getUsername();
+//        List<String> roles = userDetails.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.toList());
+//        System.out.println("💡 ROLES in profile API: " + roles);
+//        return ResponseEntity.ok(new ProfileResponse(username, roles));
+//    }
+//
+//    // DTO trả về client, Java 16+ record
+//    record ProfileResponse(String username, List<String> roles) {
+//    }
+
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(@AuthenticationPrincipal UserAdapter userDetails) {
         if (userDetails == null) {
+            System.out.println("❌ Không có userDetails (chưa đăng nhập)");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
         }
 
-        String username = userDetails.getUsername();
+        UserEntity user = userDetails.getUser(); // 👉 lỗi ở đây nếu userDetails.getUser() chưa có method
+        if (user == null) {
+            System.out.println("❌ userDetails.getUser() trả về null");
+        } else {
+            System.out.println("✅ UserEntity ID: " + user.getId());
+            System.out.println("✅ Username: " + user.getUsername());
+        }
+
+        Customer customer = user.getCustomer(); // 👉 kiểm tra xem có bị null không
+        if (customer == null) {
+            System.out.println("❌ Customer của user bị null");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User has no customer info");
+        } else {
+            System.out.println("✅ Customer found: " + customer.getFullName());
+        }
+
+        CustomerResponse response = new CustomerResponse();
+        response.setPhoneNumber(customer.getPhoneNumber());
+        response.setEmail(customer.getEmail());
+        response.setFullName(customer.getFullName());
+        response.setCreatedAt(customer.getCreatedAt());
+
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        System.out.println("💡 ROLES in profile API: " + roles);
-        return ResponseEntity.ok(new ProfileResponse(username, roles));
+        response.setRoles(roles);
+
+        System.out.println("✅ Roles: " + roles);
+
+        return ResponseEntity.ok(response);
     }
 
-    // DTO trả về client, Java 16+ record
-    record ProfileResponse(String username, List<String> roles) {
-    }
+
+
 
     // đăng kí toàn khoản
     @PostMapping("/register")
@@ -110,6 +157,10 @@ public class AuthApi {
             // kiểm tra email
             if (customerRepository.existsByEmail(request.getEmail())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email được đăng kí");
+            }
+            // kiểm tra phoneNumber trùng
+            if (customerRepository.existsById(request.getPhoneNumber())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Số điện thoại đã được sử dụng");
             }
 
             // tạo user
@@ -130,12 +181,10 @@ public class AuthApi {
 
             // tạo customer (email liên kết user)
             Customer customer = new Customer();
+            customer.setPhoneNumber(request.getPhoneNumber());
+            customer.setFullName("Khách hàng mới");
             customer.setEmail(request.getEmail());
             customer.setUser(userEntity);
-
-            // Nếu bạn không có phone_number từ FE, có thể tự tạo tạm:
-            customer.setPhoneNumber("0" + System.currentTimeMillis());
-            customer.setFullName("Khách hàng mới");
 
             customerRepository.save(customer);
 
@@ -150,9 +199,9 @@ public class AuthApi {
 
     // gửi mail chưa link reset
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestParam String email ) {
+    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
         Optional<Customer> optionalCustomer = customerRepository.findByEmail(email);
-        if(optionalCustomer.isEmpty()){
+        if (optionalCustomer.isEmpty()) {
             return ResponseEntity.badRequest().body("Không tìm thấy khách hàng với email: " + email);
         }
 
@@ -162,18 +211,22 @@ public class AuthApi {
             return ResponseEntity.badRequest().body("Không tìm thấy người dùng tương ứng với email này");
         }
 
-        String token=jwtUtils.generateResetPasswordToken(email);
-        String link="http://192.168.1.252:3000/auth/reset-password?token="+token;
+        String token = jwtUtils.generateResetPasswordToken(user.getUsername());
+        // In log để kiểm tra token
+        System.out.println("Token reset tạo ra: " + token);
 
-        emailService.sendEmail(email,"Khôi phục mật khẩu",
-                "Vui lòng click vào liên kết sau để đặt lại mật khẩu (có hiệu lực trong 15 phút):\n" + link);
+        String link = "http://localhost:5173/auth/reset-password?token=" + token;
+
+        emailService.sendEmail(email, "Khôi phục mật khẩu",
+                "Vui lòng click vào liên kết sau để đặt lại mật khẩu (có hiệu lực trong 15 phút):\n <a href=\"" + link + "\">Click</a>");
         return ResponseEntity.ok("Link đặt lại mật khẩu đã gửi đến email.");
     }
+
     // kiểm tra token có hợp lệ không (gọi khi FE mở form)
     @GetMapping("/check-reset-token")
     public ResponseEntity<?> checkResetToken(@RequestParam String token) {
         boolean valid = jwtUtils.validateToken(token);
-        if(!valid){
+        if (!valid) {
             return ResponseEntity.badRequest().body("Token hợp lệ hoặc đã hết hạn");
         }
         return ResponseEntity.ok("Token hợp lệ");
@@ -184,19 +237,20 @@ public class AuthApi {
     public ResponseEntity<?> resetPassword
     (@RequestParam String token,
      @RequestBody ResetPasswordRequest request) {
-        if(!jwtUtils.validateToken(token)){
+        if (!jwtUtils.validateToken(token)) {
             return ResponseEntity.badRequest().body("Token không hợp lệ hoặc đã hết hạn");
         }
-        String username= jwtUtils.getUsernameFromResetToken(token);
+        String username = jwtUtils.getUsernameFromResetToken(token);
         Optional<UserEntity> optional = userRepository.findByUsername(username);
-        if(optional.isEmpty()){
+        if (optional.isEmpty()) {
             return ResponseEntity.badRequest().body("Người dùng không tồn tại");
         }
 
         UserEntity user = optional.get();
         user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
+        System.out.println("Hash mới: " + passwordEncoder.encode(request.getNewPassword()));
 
-        return  ResponseEntity.ok("Mật khẩu đã được đặt lại thành công.");
+        return ResponseEntity.ok("Mật khẩu đã được đặt lại thành công.");
     }
 }

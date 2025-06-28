@@ -107,13 +107,4 @@ public class ServiceServiceImpl implements ServiceService {
         return modelMapper.map(entity, ServiceResponse.class);
     }
 
-
-    private ServiceResponse mapToResponse(ServiceEntity entity) {
-        ServiceResponse response = modelMapper.map(entity, ServiceResponse.class);
-        response.setCreatedAt(entity.getCreatedAt());
-        response.setUpdatedAt(entity.getUpdatedAt());
-        response.setActive(entity.getIsActive()); // nếu field trong response là `active`
-        return response;
-    }
-
 }

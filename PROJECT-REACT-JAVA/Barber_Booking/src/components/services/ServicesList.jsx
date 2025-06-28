@@ -4,11 +4,13 @@ import { getServices } from "../../reduxToolKist/services/serviceSlice";
 import BookingDialog from "../booking/BookingDialog";
 import { Button } from "antd";
 import ServiceDetails from "./ServiceDetails";
+import { useNavigate } from "react-router-dom";
 
 const ServicesList = () => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const { services, loading, error } = useSelector((state) => state.services);
+  const token = useSelector((state) => state.auth.token); // 👈 lấy token
 
   const [selectedService, setSelectedService] = useState(null); // 🆕 lưu dịch vụ để mở dialog
 
@@ -27,6 +29,15 @@ const ServicesList = () => {
   if (services.length === 0) {
     return <p className="text-center text-muted">Không có dịch vụ nào.</p>;
   }
+
+  // 👇 xử lý khi bấm nút đặt lịch
+  const handleBookingClick = (service) => {
+    if (!token) {
+      navigate("/login");
+    } else {
+      setSelectedService(service);
+    }
+  };
 
   return (
     <div className="bg-light rounded-4 p-4">
@@ -84,7 +95,7 @@ const ServicesList = () => {
 
                   <Button
                     className="flex-1 bg-red-500 hover:bg-red-600"
-                    onClick={() => setSelectedService(service)} // hiển thị BookingDialog
+                    onClick={() => handleBookingClick(service)} // hiển thị BookingDialog
                   >
                     Đặt lịch
                   </Button>
@@ -94,21 +105,12 @@ const ServicesList = () => {
           </div>
         ))}
       </div>
-      {/* Hiển thị BookingDialog khi có dịch vụ được chọn */}
-      {/* {selectedService && (
-        <BookingDialog
-          open={!!selectedService}
-          onClose={() => setSelectedService(null)}
-          serviceId={selectedService.serviceId}
-          staffId={1}
-        />
-      )} */}
-
       {selectedService && (
         <BookingDialog
           open={true}
           onClose={() => setSelectedService(null)}
           serviceId={selectedService.serviceId}
+          serviceName={`${selectedService.serviceName}(${selectedService.type})`}
           staffId={1} // hoặc chọn theo người dùng
         />
       )}

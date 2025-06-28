@@ -19,12 +19,12 @@ public class AppointmentApi {
     private final AppointmentService appointmentService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
-    public ResponseEntity<?>bookAppointment(
+//    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    public ResponseEntity<?> bookAppointment(
             @RequestBody AppointmentRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
-        String username=userDetails.getUsername();
-        AppointmentResponse response=appointmentService.createAppointment(request,username);
-        return  ResponseEntity.ok(response);
+        String username = userDetails != null ? userDetails.getUsername() : null;
+        AppointmentResponse response = appointmentService.createAppointment(request, username);
+        return ResponseEntity.ok(response);
     }
 }

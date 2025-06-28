@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,42 +34,114 @@ public class CustomerServiceImpl implements CustomerSevice {
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
+//    @Transactional
+//    @Override
+//    public CustomerResponse save(CustomerRequest request) {
+//        CustomerResponse response = new CustomerResponse();
+//        try {
+//            // Kiểm tra trùng số điện thoại
+//            if (customerRepository.existsById(request.getPhoneNumber())) {
+//                throw new BarberException(CustomerErrorCode.DUPLICATE_PHONE);
+//            }
+//            // Kiểm tra trùng email
+//            if (customerRepository.existsByEmail(request.getEmail())) {
+//                throw new BarberException(CustomerErrorCode.DUPLICATE_EMAIL);
+//            }
+//
+//
+//            // Tạo UserEntity
+//            UserEntity newUser = new UserEntity();
+//            newUser.setUsername(request.getPhoneNumber());
+//            newUser.setPasswordHash(passwordEncoder.encode(request.getPasswordHash()));
+//
+//            // Gán vai trò ROLE_USER
+//            Role userRole = roleRepository.findByRoleName("ROLE_CUSTOMER")
+//                    .orElseThrow(() -> new BarberException(CustomerErrorCode.SYSTEM_ERROR));
+//            UserRole userRoleLink = new UserRole();
+//            userRoleLink.setUser(newUser);
+//            userRoleLink.setRole(userRole);
+//            userRoleLink.setId(new UserRoleId(null, userRole.getId()));
+//            newUser.getRoles().add(userRoleLink);
+//            userRepository.save(newUser);
+//
+//            // Lưu khách hàng
+//            Customer customer = modelMapper.map(request, Customer.class);
+//            customer.setUser(newUser);
+//            customer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+//            Customer saved = customerRepository.save(customer);
+//
+//            // Tạo phản hồi
+//            response = modelMapper.map(saved, CustomerResponse.class);
+//            List<String> roles = newUser.getRoles().stream()
+//                    .map(link -> link.getRole().getRoleName())
+//                    .collect(Collectors.toList());
+//            response.setRoles(roles);
+//            response.setErrorCode(CustomerErrorCode.CREATE_SUCCESS);
+//            response.setErrorMessage(ErrorMessageLoader.getProperty(CustomerErrorCode.CREATE_SUCCESS));
+//        } catch (BarberException e) {
+//            response.setErrorCode(e.getErrorMessage().getErrorCode());
+//            response.setErrorMessage(ErrorMessageLoader.getProperty(e.getErrorMessage().getErrorCode()));
+//        } catch (Exception e) {
+//            response.setErrorCode(CustomerErrorCode.CREATE_FAILURE);
+//            response.setErrorMessage(ErrorMessageLoader.getProperty(CustomerErrorCode.CREATE_FAILURE));
+//        }
+//        return response;
+//    }
+
     @Transactional
     @Override
     public CustomerResponse save(CustomerRequest request) {
         CustomerResponse response = new CustomerResponse();
         try {
-            // Kiểm tra trùng số điện thoại
+            // 1. Kiểm tra trùng phone (là @Id)
             if (customerRepository.existsById(request.getPhoneNumber())) {
                 throw new BarberException(CustomerErrorCode.DUPLICATE_PHONE);
             }
-            // Kiểm tra trùng email
+
+            // 2. Kiểm tra trùng email
             if (customerRepository.existsByEmail(request.getEmail())) {
                 throw new BarberException(CustomerErrorCode.DUPLICATE_EMAIL);
             }
 
-            // Tạo UserEntity
-            UserEntity newUser = new UserEntity();
-            newUser.setUsername(request.getPhoneNumber());
-            newUser.setPasswordHash(passwordEncoder.encode(request.getPasswordHash()));
+            // 3. Kiểm tra nếu user đã tồn tại
+            Optional<UserEntity> existingUserOpt = userRepository.findByUsername(request.getPhoneNumber());
+            if (existingUserOpt.isPresent()) {
+                UserEntity existingUser = existingUserOpt.get();
 
-            // Gán vai trò ROLE_USER
-            Role userRole = roleRepository.findByRoleName("ROLE_USER")
-                    .orElseThrow(() -> new BarberException(CustomerErrorCode.SYSTEM_ERROR));
-            UserRole userRoleLink = new UserRole();
-            userRoleLink.setUser(newUser);
-            userRoleLink.setRole(userRole);
-            userRoleLink.setId(new UserRoleId(null, userRole.getId()));
-            newUser.getRoles().add(userRoleLink);
-            userRepository.save(newUser);
+                // Nếu user đã có Customer liên kết thì lỗi
+                if (customerRepository.findByUserId(existingUser.getId()).isPresent()) {
+                    throw new BarberException("Người dùng đã có thông tin khách hàng");
+                }
 
-            // Lưu khách hàng
+                // Ngược lại — user chưa có customer, thì có thể dùng lại user này
+            }
+
+            // 4. Tạo mới UserEntity nếu chưa có
+            UserEntity newUser = existingUserOpt.orElseGet(() -> {
+                UserEntity user = new UserEntity();
+                user.setUsername(request.getPhoneNumber());
+                user.setPasswordHash(passwordEncoder.encode(request.getPasswordHash()));
+
+                // Gán vai trò
+                Role userRole = roleRepository.findByRoleName("ROLE_CUSTOMER")
+                        .orElseThrow(() -> new BarberException(CustomerErrorCode.SYSTEM_ERROR));
+                UserRole userRoleLink = new UserRole();
+                userRoleLink.setUser(user);
+                userRoleLink.setRole(userRole);
+                userRoleLink.setId(new UserRoleId(null, userRole.getId()));
+                user.getRoles().add(userRoleLink);
+
+                return userRepository.save(user);
+            });
+
+            // 5. Tạo mới Customer
             Customer customer = modelMapper.map(request, Customer.class);
             customer.setUser(newUser);
             customer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+
             Customer saved = customerRepository.save(customer);
 
-            // Tạo phản hồi
+            // 6. Tạo phản hồi
             response = modelMapper.map(saved, CustomerResponse.class);
             List<String> roles = newUser.getRoles().stream()
                     .map(link -> link.getRole().getRoleName())
@@ -85,6 +158,8 @@ public class CustomerServiceImpl implements CustomerSevice {
         }
         return response;
     }
+
+
 
     @Override
     public List<CustomerResponse> getAllCustomers() {

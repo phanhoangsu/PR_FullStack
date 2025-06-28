@@ -1,8 +1,8 @@
-import { Header } from "antd/es/layout/layout";
 import HeroSection from "../components/services/HeroSection";
 import StatsCards from "../components/services/StatsCards";
 import ServicesList from "../components/services/ServicesList";
 import { useState } from "react";
+import Header from "../components/services/Header";
 
 const ServicePage = () => {
   const [selectedServiceId, setSelectedServiceId] = useState(null);

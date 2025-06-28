@@ -1,5 +1,6 @@
 package com.barbershop.model.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,12 @@ public class AppointmentRequest {
 
     private Integer serviceId;
     private Integer staffId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp startTime;
-    private Timestamp endTime;
+//
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+//    private Timestamp endTime;
+
     private String notes;
+    private  String email;
 }

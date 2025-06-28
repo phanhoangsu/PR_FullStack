@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class StaffResponse {
-    private Integer id;
+        private Integer id;
     private String fullName;
     private String role;
     private Gender gender;

@@ -13,10 +13,6 @@ public class StaffRequest {
     @Size(max =100,message = "Họ tên không vượt quá 100 ký tự")
     private String fullName;
 
-//    @NotBlank(message = "Vai trò không được để trống")
-//    @Size(max = 50,message = "Vai trò không vượt quá 50 ký tự")
-//    private String role;
-
     @NotNull(message = "Giới tính không được để trống")
     private Gender gender;
 

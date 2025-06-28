@@ -18,22 +18,10 @@ public class UserAdapter implements UserDetails {
         this.user = userEntity;
     }
 
-    // lấy quyền để Spring phân quyền
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        List<GrantedAuthority> authorities = new ArrayList<>();
-//        if(user.getRoles()!=null) {
-//            for (UserRole ur : user.getRoles()) {
-//                Role role = ur.getRole();
-//                String roleName = role.getRoleName();
-//                System.out.println("User has role: " + roleName);
-//                authorities.add(new SimpleGrantedAuthority(roleName));
-//            }
-//        }else {
-//            System.out.println("User has NO roles");
-//        }
-//        return authorities;
-//    }
+    public UserEntity getUser() {
+        return user;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();

@@ -23,14 +23,11 @@ public class UserEntity {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    //    @ManyToMany
-//    @JoinTable(
-//            name = "UserRole",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id"))
-//    private Set<Role> roles = new LinkedHashSet<>();
-    // Liên kết với bảng trung gian UserRole
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<UserRole> roles = new HashSet<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Customer customer;
+
 
 }
