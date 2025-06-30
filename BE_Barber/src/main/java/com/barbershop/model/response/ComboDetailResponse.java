@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ComboDetailResponse {
+    private Integer comboId;
     private String comboName;
     private List<ComboItemResponse> items;
     private BigDecimal totalPrice;

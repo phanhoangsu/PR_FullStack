@@ -25,7 +25,7 @@ public class CustomerApi {
 
     // Tạo mới khách hàng
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CustomerResponse> createCustomer(@Valid @RequestBody CustomerRequest request) {
         CustomerResponse response = customerSevice.save(request);
         return buildResponse(response);
@@ -47,7 +47,7 @@ public class CustomerApi {
 
     // Cập nhật thông tin khách hàng
     @PutMapping("/{phoneNumber}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CustomerResponse> updateCustomer(@PathVariable String phoneNumber, @Valid @RequestBody CustomerRequest request) {
         CustomerResponse response = customerSevice.update(phoneNumber, request);
         return buildResponse(response);
@@ -55,7 +55,7 @@ public class CustomerApi {
 
     // Xóa khách hàng
     @DeleteMapping("/{phoneNumber}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CustomerResponse> deleteCustomer(@PathVariable String phoneNumber) {
         CustomerResponse response = customerSevice.delete(phoneNumber);
         return buildResponse(response);

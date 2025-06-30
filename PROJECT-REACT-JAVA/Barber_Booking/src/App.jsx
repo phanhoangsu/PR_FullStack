@@ -4,8 +4,8 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import AuthForm from "./components/Login/AuthForm";
 import ServicePage from "./pages/ServicePage";
 import StaffList from "./components/staff/StaffList";
-import ServiceManagement from "./admin/ServiceManagement";
-import StaffManagement from "./admin/StaffManagement";
+import AdminPage from "./pages/AdminPage";
+import ComboManager from "./components/admin/ComboManager";
 
 function App() {
   const token = useSelector((state) => state.auth.token);
@@ -21,8 +21,9 @@ function App() {
         path="/staff"
         element={token ? <StaffList /> : <Navigate to="/login" replace />}
       />
-      <Route path="/admin/services" element={<ServiceManagement />} />
-      <Route path="/admin/staff" element={<StaffManagement />} />
+
+      <Route path="/admin" element={<AdminPage />} />
+      <Route path="/admin/combo" element={<ComboManager />} />
     </Routes>
   );
 }

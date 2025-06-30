@@ -179,7 +179,7 @@ public class AuthApi {
             // tạo customer (email liên kết user)
             Customer customer = new Customer();
             customer.setPhoneNumber(request.getPhoneNumber());
-            customer.setFullName(request.getFullName());
+            customer.setFullName("Khách hàng mới");
             customer.setEmail(request.getEmail());
             customer.setUser(userEntity);
 

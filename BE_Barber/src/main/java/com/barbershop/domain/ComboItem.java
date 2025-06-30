@@ -54,4 +54,7 @@ public class ComboItem {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
 }

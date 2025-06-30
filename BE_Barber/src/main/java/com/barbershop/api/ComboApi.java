@@ -20,7 +20,7 @@ import java.util.Map;
 public class ComboApi {
     private final ComboService comboService;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ErrorMessage  create(@RequestBody ComboRequest request) {
         String resultCode  = comboService.createCombo(request);
@@ -40,7 +40,7 @@ public class ComboApi {
 //                .dataError(combo)
 //                .build();
 //    }
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+//@PreAuthorize("hasRole('ROLE_ADMIN')")
 @PutMapping("/{id}")
 public ErrorMessage update(@PathVariable Integer id, @RequestBody ComboRequest request) {
     ComboDetailResponse response = comboService.updateCombo(id, request);
@@ -53,7 +53,7 @@ public ErrorMessage update(@PathVariable Integer id, @RequestBody ComboRequest r
 }
 
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ErrorMessage  delete(@PathVariable Integer id) {
         comboService.softDeleteCombo(id);

@@ -5,18 +5,35 @@ import BookingDialog from "../booking/BookingDialog";
 import { Button } from "antd";
 import ServiceDetails from "./ServiceDetails";
 import { useNavigate } from "react-router-dom";
+import ProductDetails from "../products/ProductDetails"; // chỉnh lại đường dẫn đúng nếu khác
+import { getAllProducts } from "../../reduxToolKist/products/productSlice";
 
 const ServicesList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { services, loading, error } = useSelector((state) => state.services);
-  const token = useSelector((state) => state.auth.token); // 👈 lấy token
+  const token = useSelector((state) => state.auth.token);
 
-  const [selectedService, setSelectedService] = useState(null); // 🆕 lưu dịch vụ để mở dialog
+  const [selectedService, setSelectedService] = useState(null);
+
+  const {
+    products,
+    loading: productLoading,
+    error: productError,
+  } = useSelector((state) => state.product);
 
   useEffect(() => {
     dispatch(getServices());
+    dispatch(getAllProducts());
   }, [dispatch]);
+
+  const handleBookingClick = (service) => {
+    if (!token) {
+      navigate("/login");
+    } else {
+      setSelectedService(service);
+    }
+  };
 
   if (loading) {
     return <p className="text-center">Đang tải dịch vụ...</p>;
@@ -29,15 +46,6 @@ const ServicesList = () => {
   if (services.length === 0) {
     return <p className="text-center text-muted">Không có dịch vụ nào.</p>;
   }
-
-  // 👇 xử lý khi bấm nút đặt lịch
-  const handleBookingClick = (service) => {
-    if (!token) {
-      navigate("/login");
-    } else {
-      setSelectedService(service);
-    }
-  };
 
   return (
     <div className="bg-light rounded-4 p-4">
@@ -94,7 +102,7 @@ const ServicesList = () => {
                   </ServiceDetails>
 
                   <Button
-                    className="flex-1 bg-red-500 hover:bg-red-600"
+                    className="flex-1 bg-red-500 hover:bg-red-600 "
                     onClick={() => handleBookingClick(service)} // hiển thị BookingDialog
                   >
                     Đặt lịch
@@ -105,14 +113,83 @@ const ServicesList = () => {
           </div>
         ))}
       </div>
+
       {selectedService && (
         <BookingDialog
           open={true}
           onClose={() => setSelectedService(null)}
           serviceId={selectedService.serviceId}
-          serviceName={`${selectedService.serviceName}(${selectedService.type})`}
-          staffId={1} // hoặc chọn theo người dùng
+          serviceName={`${selectedService.serviceName} (${selectedService.type})`}
+          staffId={1}
         />
+      )}
+
+      {/* ✅ Danh sách sản phẩm bán kèm */}
+      <hr className="my-5" />
+      <h2 className="text-center mb-4 fw-bold">Top Sản Phẩm Nổi Bật</h2>
+      <p className="text-center text-muted mb-4">
+        Chăm sóc tóc và tạo kiểu chuyên nghiệp
+      </p>
+
+      {productLoading ? (
+        <p className="text-center">Đang tải sản phẩm...</p>
+      ) : productError ? (
+        <p className="text-danger text-center">Lỗi: {productError}</p>
+      ) : products.length === 0 ? (
+        <p className="text-center text-muted">Không có sản phẩm nào.</p>
+      ) : (
+        <div className="row g-4">
+          {products.map((product) => (
+            <div key={product.productId} className="col-md-6">
+              <div className="card h-100 shadow-sm border-0">
+                <div className="position-relative">
+                  <img
+                    src={product.imageUrl}
+                    className="card-img-top"
+                    alt={product.title}
+                    style={{ height: "200px", objectFit: "cover" }}
+                  />
+                  <span className="position-absolute top-0 start-0 badge bg-info m-2">
+                    Stock: {product.stock}
+                  </span>
+                  <div className="position-absolute bottom-0 end-0 bg-dark text-white px-2 py-1 m-2 rounded">
+                    ⚡ Hot Deal
+                  </div>
+                </div>
+
+                <div className="card-body">
+                  <h5 className="card-title fw-bold">{product.title}</h5>
+                  <p className="card-text text-muted small">
+                    {product.description}
+                  </p>
+
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                      <span className="fw-bold text-success fs-5">
+                        {product.price.toLocaleString()}₫
+                      </span>
+                      <small className="text-muted d-block">
+                        🚚 Giao nhanh
+                      </small>
+                    </div>
+                  </div>
+
+                  <div className="d-flex gap-2">
+                    <ProductDetails product={product}>
+                      <Button variant="outline" className="flex-1">
+                        Chi Tiết
+                      </Button>
+                    </ProductDetails>
+
+                    <Button className="flex-1 bg-red-500 hover:bg-red-600 ">
+                      Đặt mua
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );

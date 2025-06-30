@@ -7,18 +7,18 @@
     import java.sql.Timestamp;
     @Data
     public class StaffScheduleRequest {
-        @NotNull(message = "Staff ID không được để trống")
+//        @NotNull(message = "Staff ID không được để trống")
         private Integer staff;
 
-        @NotNull(message = "Thời gian bắt đầu không được để trống")
-        @Future(message = "Thời gian bắt đầu phải ở tương lai")
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss",timezone = "UTC")
+//        @NotNull(message = "Thời gian bắt đầu không được để trống")
+//        @Future(message = "Thời gian bắt đầu phải ở tương lai")
+//        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss",timezone = "UTC")
         private Timestamp startTime;
 
 
-        @NotNull(message = "Thời gian kết thúc không được để trống")
-        @Future(message = "Thời gian kết thúc phải ở tương lai")
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss",timezone = "UTC")
+//        @NotNull(message = "Thời gian kết thúc không được để trống")
+//        @Future(message = "Thời gian kết thúc phải ở tương lai")
+//        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss",timezone = "UTC")
         private Timestamp endTime;
 
     //    // Kiểm tra startTime < endTime

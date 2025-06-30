@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../reduxToolKist/auth/authSlice";
 import BookingDialog from "../booking/BookingDialog";
+import { Scissors } from "lucide-react";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -36,9 +37,10 @@ const Header = () => {
       >
         <div className="container">
           <a className="navbar-brand fw-bold text-warning" href="/services">
-            <span className="bg-warning text-dark px-2 py-1 rounded me-2">
+            {/* <span className="bg-warning text-dark px-2 py-1 rounded me-2">
               OS
-            </span>
+            </span> */}
+            <Scissors className="h-8 w-8 text-white" />
             OLDFASHIONED
           </a>
 
@@ -50,7 +52,6 @@ const Header = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav me-auto">
               <li className="nav-item">

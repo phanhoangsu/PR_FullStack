@@ -16,7 +16,7 @@ import {
   getAllStaff,
   editStaff,
   removeStaff,
-} from "../reduxToolKist/staff/staffSlice";
+} from "../../reduxToolKist/staff/staffSlice";
 
 const { Option } = Select;
 
@@ -64,6 +64,7 @@ const StaffManagement = () => {
     } else {
       dispatch(addStaff(values)).then(() => {
         message.success("Thêm nhân viên thành công");
+        dispatch(getAllStaff()); // 🛠️ reload lại dữ liệu
         closeModal();
       });
     }

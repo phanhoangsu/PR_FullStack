@@ -21,7 +21,7 @@ public class StaffScheduleApi {
     private final StaffScheduleService staffScheduleService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> create(@Valid @RequestBody StaffScheduleRequest request) {
         staffScheduleService.save(request);
         return ResponseEntity.ok(Collections.singletonMap("message", "Created Successfully"));
@@ -38,7 +38,7 @@ public class StaffScheduleApi {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(
             @PathVariable Integer id,
             @RequestBody StaffScheduleRequest request) {
@@ -47,7 +47,7 @@ public class StaffScheduleApi {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable Integer id) {
         staffScheduleService.deleteById(id);
         return ResponseEntity.ok(Collections.singletonMap("message", "Deleted Successfully"));

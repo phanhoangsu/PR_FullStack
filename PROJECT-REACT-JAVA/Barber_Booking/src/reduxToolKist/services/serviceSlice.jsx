@@ -23,7 +23,7 @@ export const editService = createAsyncThunk(
   "services/update",
   async ({ id, data }) => {
     const res = await updateService(id, data);
-    return id;
+    return res.data.dataError;
   }
 );
 
@@ -58,13 +58,17 @@ const serviceSlice = createSlice({
       })
       .addCase(editService.fulfilled, (state, action) => {
         const index = state.services.findIndex(
-          (s) => s.id === action.payload.id
+          (s) => s.serviceId === action.payload.serviceId
         );
-        if (index !== 1) state.services[index] = action.payload;
+        if (index !== -1) {
+          state.services[index] = action.payload;
+        }
       })
 
       .addCase(removeService.fulfilled, (state, action) => {
-        state.services = state.services.filter((s) => s.id !== action.payload);
+        state.services = state.services.filter(
+          (s) => s.serviceId !== action.payload
+        );
       });
   },
 });

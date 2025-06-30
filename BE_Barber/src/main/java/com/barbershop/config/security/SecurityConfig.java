@@ -62,7 +62,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/token").permitAll()
-                        .requestMatchers("/api/customers/**").authenticated() // tạm thời
+                        .requestMatchers("/api/customers/**").permitAll() // tạm thời
                         .requestMatchers(("/api/auth/profile")).permitAll()
                         .requestMatchers(("/api/staff/**")).permitAll()
                         .requestMatchers(("/api/staff-schedules/**")).permitAll()

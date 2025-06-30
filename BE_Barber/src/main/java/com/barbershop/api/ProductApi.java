@@ -21,7 +21,7 @@ public class ProductApi {
     private final ProductService productService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ErrorMessage  create(@RequestBody ProductRequest productRequest) {
         ProductResponse response = productService.create(productRequest);
         return ErrorMessage.builder()
@@ -32,7 +32,7 @@ public class ProductApi {
     }
 
     @PutMapping("{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ErrorMessage update(@PathVariable Integer id, @RequestBody ProductRequest productRequest) {
         ProductResponse response = productService.update(id, productRequest);
         return ErrorMessage.builder()
@@ -43,7 +43,7 @@ public class ProductApi {
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ErrorMessage delete(@PathVariable Integer id) {
         productService.delete(id);
         return ErrorMessage.builder()

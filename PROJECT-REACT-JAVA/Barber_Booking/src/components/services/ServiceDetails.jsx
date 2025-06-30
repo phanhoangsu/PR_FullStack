@@ -39,7 +39,7 @@ const ServiceDetails = ({ service, children }) => {
         <div className="space-y-6">
           {/* Hình ảnh dịch vụ */}
           <div className="relative mb-4">
-            <Image
+            {/* <Image
               src={serviceDetails.imageUrl}
               alt={serviceDetails.serviceName}
               width="100%"
@@ -50,13 +50,25 @@ const ServiceDetails = ({ service, children }) => {
             <Badge
               count={serviceDetails.type}
               style={{ position: "absolute", top: 10, left: 10 }}
-            />
+            /> */}
+            <div className="relative mb-4">
+              <img
+                src={serviceDetails.imageUrl}
+                alt={serviceDetails.serviceName}
+                className="w-full h-[250px] object-cover rounded"
+              />
+
+              {/* 👉 Thẻ Type gắn vào góc ảnh */}
+              <span className="absolute top-2 left-2 bg-warning px-3 py-1 text-sm font-semibold text-dark rounded shadow">
+                {serviceDetails.type}
+              </span>
+            </div>
           </div>
 
           {/* Thông tin mô tả */}
           <Typography>
-            <Title level={4}>{serviceDetails.serviceName}</Title>
-            <Paragraph>{serviceDetails.description}</Paragraph>
+            <Title level={4}>Tên dịch vụ: {serviceDetails.serviceName}</Title>
+            <Text strong>Description: {serviceDetails.description}</Text>
           </Typography>
 
           {/* Thông tin chi tiết */}
@@ -67,7 +79,7 @@ const ServiceDetails = ({ service, children }) => {
                 <Text strong>ID:</Text> {serviceDetails.serviceId}
               </Paragraph>
               <Paragraph>
-                <Text strong>Giá:</Text>{" "}
+                <Text strong>Price:</Text>{" "}
                 <Text type="danger" strong>
                   {serviceDetails.price}
                 </Text>
