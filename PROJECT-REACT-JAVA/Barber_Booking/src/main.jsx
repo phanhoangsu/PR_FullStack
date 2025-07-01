@@ -8,6 +8,7 @@ import "./index.css";
 import { store } from "./reduxToolKist/Store";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "antd/dist/reset.css"; // cho Ant Design v5+
+import "bootstrap/dist/js/bootstrap.bundle.min.js"; // cần để collapse hoạt động
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
