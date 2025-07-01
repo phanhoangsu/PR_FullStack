@@ -6,6 +6,7 @@ import ServicePage from "./pages/ServicePage";
 import StaffList from "./components/staff/StaffList";
 import AdminPage from "./pages/AdminPage";
 import ComboManager from "./components/admin/ComboManager";
+import ContactPage from "./pages/ContactPage";
 
 function App() {
   const token = useSelector((state) => state.auth.token);
@@ -24,6 +25,7 @@ function App() {
 
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/admin/combo" element={<ComboManager />} />
+      <Route path="/contact" element={<ContactPage />} />
     </Routes>
   );
 }

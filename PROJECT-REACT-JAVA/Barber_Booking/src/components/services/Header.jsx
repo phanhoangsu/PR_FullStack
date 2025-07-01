@@ -161,7 +161,8 @@ const Header = () => {
           className="navbar navbar-expand-lg navbar-dark py-3"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.95)" }}
         >
-          <div className="container d-flex justify-content-between align-items-center">
+          {/* <div className="container d-flex justify-content-between align-items-center"> */}
+          <div className="container-fluid px-5 d-flex justify-content-between align-items-center">
             {/* Logo */}
             <a className="navbar-brand" href="/services">
               <img src={logoImg} alt="Logo" style={{ height: "45px" }} />
@@ -188,37 +189,58 @@ const Header = () => {
               {/* Menu giữa */}
               <ul className="navbar-nav mx-auto gap-3">
                 <li className="nav-item">
-                  <a className="nav-link text-white" href="#tab-home">
+                  <a
+                    className="nav-link text-white px-3 py-2 fs-5"
+                    href="#tab-home"
+                  >
                     Home
                   </a>
                 </li>
-                <li className="nav-item">
-                  <a className="nav-link text-white" href="#tab-about">
+                {/* <li className="nav-item">
+                  <a
+                    className="nav-link text-white px-3 py-2 fs-5"
+                    href="#tab-about"
+                  >
                     About Us
                   </a>
-                </li>
+                </li> */}
                 <li className="nav-item">
-                  <a className="nav-link text-white" href="#tab-services">
+                  <a
+                    className="nav-link text-white px-3 py-2 fs-5"
+                    href="#tab-services"
+                  >
                     Services
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link text-white" href="#tab-prices">
+                  <a
+                    className="nav-link text-white px-3 py-2 fs-5"
+                    href="#tab-prices"
+                  >
                     Prices
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link text-white" href="#tab-gallery">
+                  <a
+                    className="nav-link text-white px-3 py-2 fs-5"
+                    href="#tab-gallery"
+                  >
                     Gallery
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link text-white" href="#tab-contact">
+                  <a
+                    className="nav-link text-white px-3 py-2 fs-5"
+                    href="/contact"
+                  >
                     Contact
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link text-white" href="/blog">
+                  <a
+                    className="nav-link text-white px-3 py-2 fs-5"
+                    href="/blog"
+                  >
                     Blog
                   </a>
                 </li>
