@@ -78,17 +78,46 @@ const ProductManagement = () => {
   };
 
   const columns = [
+    // {
+    //   title: "Ảnh",
+    //   dataIndex: "imageUrl",
+    //   render: (url) => (
+    //     <img
+    //       src={url}
+    //       alt="product"
+    //       className="w-14 h-14 object-cover rounded shadow"
+    //     />
+    //   ),
+    // },
     {
       title: "Ảnh",
       dataIndex: "imageUrl",
       render: (url) => (
-        <img
-          src={url}
-          alt="product"
-          className="w-14 h-14 object-cover rounded shadow"
-        />
+        <div
+          style={{
+            width: "80px",
+            height: "80px",
+            borderRadius: "8px",
+            overflow: "hidden",
+            border: "1px solid #e5e7eb", // Tailwind's border-gray-200
+            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+            margin: "auto",
+          }}
+        >
+          <img
+            src={url}
+            alt="Ảnh sản phẩm"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
+          />
+        </div>
       ),
     },
+
     {
       title: "Tên sản phẩm",
       dataIndex: "title",

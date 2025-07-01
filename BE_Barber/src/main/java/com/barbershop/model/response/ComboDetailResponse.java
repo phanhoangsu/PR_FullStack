@@ -15,4 +15,6 @@ public class ComboDetailResponse {
     private String comboName;
     private List<ComboItemResponse> items;
     private BigDecimal totalPrice;
+
+
 }

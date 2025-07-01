@@ -249,10 +249,10 @@ const ComboManager = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [services, setServices] = useState([]);
   const [items, setItems] = useState([]);
+  const [selectedServiceIds, setSelectedServiceIds] = useState([]);
   const [editingCombo, setEditingCombo] = useState(null);
   const [form] = Form.useForm();
 
-  // Fetch combos & services
   useEffect(() => {
     dispatch(getCombos());
     http.get("services").then((res) => {
@@ -263,24 +263,10 @@ const ComboManager = () => {
     });
   }, [dispatch]);
 
-  const handleAddItem = () => {
-    setItems([...items, { serviceId: null, quantity: 1, price: 0 }]);
-  };
-
   const handleItemChange = (index, field, value) => {
     const newItems = [...items];
     newItems[index][field] = value;
     setItems(newItems);
-  };
-
-  const isDuplicate = (arr, key) => {
-    const seen = new Set();
-    for (let item of arr) {
-      const value = item[key];
-      if (value && seen.has(value)) return true;
-      if (value) seen.add(value);
-    }
-    return false;
   };
 
   const handleSubmit = async () => {
@@ -291,8 +277,9 @@ const ComboManager = () => {
         return message.warning("Combo phải có ít nhất một dịch vụ.");
       }
 
-      if (isDuplicate(items, "serviceId")) {
-        return message.error("Một dịch vụ không được lặp lại trong combo.");
+      const uniqueServiceIds = new Set(items.map((i) => i.serviceId));
+      if (uniqueServiceIds.size !== items.length) {
+        return message.error("Không được chọn trùng dịch vụ trong combo.");
       }
 
       const payload = {
@@ -308,6 +295,8 @@ const ComboManager = () => {
       };
 
       if (editingCombo) {
+        // 🧨 Xoá toàn bộ ComboItems trước khi cập nhật để tránh lỗi duplicate
+        await http.delete(`/combos/${editingCombo.comboId}`);
         await dispatch(
           updateCombo({ id: editingCombo.comboId, data: payload })
         ).unwrap();
@@ -319,6 +308,7 @@ const ComboManager = () => {
 
       form.resetFields();
       setItems([]);
+      setSelectedServiceIds([]);
       setEditingCombo(null);
       setIsModalOpen(false);
       dispatch(getCombos());
@@ -344,16 +334,18 @@ const ComboManager = () => {
       description: combo.description,
     });
 
-    setItems(
-      combo.items.map((i) => ({
-        serviceId: i.serviceId,
-        productId: i.productId,
-        quantity: i.quantity,
-        price: i.price,
-        description: i.description,
-      }))
-    );
+    const selectedIds = combo.items.map((i) => i.serviceId);
+    setSelectedServiceIds(selectedIds);
 
+    const mappedItems = combo.items.map((i) => ({
+      serviceId: i.serviceId,
+      productId: i.productId,
+      quantity: i.quantity,
+      price: i.price,
+      description: i.description,
+    }));
+
+    setItems(mappedItems);
     setEditingCombo(combo);
     setIsModalOpen(true);
   };
@@ -398,6 +390,7 @@ const ComboManager = () => {
           onClick={() => {
             setIsModalOpen(true);
             setItems([]);
+            setSelectedServiceIds([]);
             setEditingCombo(null);
             form.resetFields();
           }}
@@ -407,7 +400,7 @@ const ComboManager = () => {
       </div>
 
       <Table
-        dataSource={combos} // chỉ hiển thị combo active
+        dataSource={combos}
         rowKey="comboId"
         columns={columns}
         loading={loading}
@@ -433,40 +426,66 @@ const ComboManager = () => {
             <Input.TextArea />
           </Form.Item>
 
+          <Form.Item label="Chọn dịch vụ">
+            <Select
+              mode="multiple"
+              style={{ width: "100%" }}
+              placeholder="Chọn dịch vụ"
+              value={selectedServiceIds}
+              onChange={(values) => {
+                setSelectedServiceIds(values);
+                const updatedItems = values.map((serviceId) => {
+                  const existing = items.find(
+                    (item) => item.serviceId === serviceId
+                  );
+                  return (
+                    existing || {
+                      serviceId,
+                      quantity: 1,
+                      price: 0,
+                    }
+                  );
+                });
+                setItems(updatedItems);
+              }}
+              options={services.map((s) => ({
+                label: s.serviceName,
+                value: s.serviceId,
+              }))}
+            />
+          </Form.Item>
+
           <div className="space-y-4">
-            {items.map((item, index) => (
-              <div
-                key={index}
-                className="grid grid-cols-3 gap-3 items-center w-full"
-              >
-                <Select
-                  value={item.serviceId}
-                  placeholder="Chọn dịch vụ"
-                  options={services.map((s) => ({
-                    label: s.serviceName,
-                    value: s.serviceId,
-                  }))}
-                  onChange={(value) =>
-                    handleItemChange(index, "serviceId", value)
-                  }
-                />
-                <InputNumber
-                  min={1}
-                  value={item.quantity}
-                  onChange={(value) =>
-                    handleItemChange(index, "quantity", value)
-                  }
-                  placeholder="Số lượng"
-                />
-                <InputNumber
-                  min={0}
-                  value={item.price}
-                  onChange={(value) => handleItemChange(index, "price", value)}
-                  placeholder="Giá"
-                />
-              </div>
-            ))}
-            <Button onClick={handleAddItem}>+ Thêm mục</Button>
+            {items.map((item, index) => {
+              const serviceName =
+                services.find((s) => s.serviceId === item.serviceId)
+                  ?.serviceName || "";
+
+              return (
+                <div
+                  key={item.serviceId}
+                  className="grid grid-cols-3 gap-3 items-center"
+                >
+                  <Input value={serviceName} disabled />
+                  <InputNumber
+                    min={1}
+                    value={item.quantity}
+                    onChange={(value) =>
+                      handleItemChange(index, "quantity", value)
+                    }
+                    placeholder="Số lượng"
+                  />
+                  <InputNumber
+                    min={0}
+                    value={item.price}
+                    onChange={(value) =>
+                      handleItemChange(index, "price", value)
+                    }
+                    placeholder="Giá"
+                  />
+                </div>
+              );
+            })}
           </div>
         </Form>
       </Modal>

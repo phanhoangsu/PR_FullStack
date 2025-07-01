@@ -1,0 +1,195 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Header Section */
+.header-section {
+  background-color: #111;
+  padding: 15px 0;
+  position: relative;
+  z-index: 1000;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-brand img {
+  height: 50px;
+}
+
+.menu-wrap {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.mainmenu ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.mainmenu ul li {
+  position: relative;
+}
+
+.mainmenu ul li a {
+  color: white;
+  text-decoration: none;
+  padding: 8px 12px;
+  display: block;
+}
+
+.mainmenu ul li:hover > ul {
+  display: block;
+}
+
+.mainmenu ul li ul {
+  display: none;
+  position: absolute;
+  background-color: #222;
+  top: 100%;
+  left: 0;
+  min-width: 180px;
+  z-index: 999;
+}
+
+.mainmenu ul li ul li {
+  border-bottom: 1px solid #444;
+}
+
+.mainmenu ul li ul li a {
+  padding: 10px;
+  color: #ccc;
+}
+
+.header-btn .menu-btn {
+  background-color: #d4af37;
+  color: black;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.header-btn .menu-btn:hover {
+  background-color: #b08c2f;
+}
+
+/* Slider Section */
+.slider_section {
+  position: relative;
+  overflow: hidden;
+  height: 90vh;
+}
+
+.main_slider {
+  height: 100%;
+}
+
+.main_slide {
+  background-size: cover;
+  background-position: center;
+  height: 100%;
+  display: flex !important;
+  align-items: center;
+}
+
+.slider_content {
+  color: white;
+  max-width: 600px;
+}
+
+.slider_content h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.slider_content p {
+  margin-bottom: 1.5rem;
+}
+
+.default_btn {
+  background-color: #d4af37;
+  color: black;
+  padding: 10px 20px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.default_btn:hover {
+  background-color: #b08c2f;
+}
+
+/* Appointment Section */
+.book_section {
+  position: relative;
+  background-color: #f7f7f7;
+  padding: 60px 0;
+}
+
+.book_bg,
+.map_pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("/img/book-bg.png") no-repeat center center;
+  background-size: cover;
+  z-index: 1;
+  opacity: 0.1;
+}
+
+.appointment_form {
+  position: relative;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.book_content h2 {
+  margin-bottom: 10px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.book_content p {
+  color: #555;
+  font-size: 15px;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+#app_submit {
+  background-color: #d4af37;
+  color: black;
+  font-weight: bold;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+#app_submit:hover {
+  background-color: #b08c2f;
+}

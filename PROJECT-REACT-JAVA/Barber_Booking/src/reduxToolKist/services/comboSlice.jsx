@@ -6,7 +6,7 @@ export const getCombos = createAsyncThunk(
   "combo/getAll",
   async (_, thunkAPI) => {
     try {
-      const res = await http.get("combos/all");
+      const res = await http.get("combos");
       return res.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response?.data || "Lỗi load combo");
