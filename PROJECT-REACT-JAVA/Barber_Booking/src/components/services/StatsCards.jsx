@@ -43,7 +43,7 @@ const StatsCards = () => {
     <>
       {/* Stats section */}
 
-      <div className="d-flex flex-wrap justify-content-between mb-5">
+      <div className="d-flex flex-wrap justify-content-between mb-5 ">
         {stats.map((stat, index) => (
           <div key={index} style={{ flex: "0 0 19%", minWidth: "180px" }}>
             <div className={`card h-100 ${stat.bgColor} border-0 shadow`}>

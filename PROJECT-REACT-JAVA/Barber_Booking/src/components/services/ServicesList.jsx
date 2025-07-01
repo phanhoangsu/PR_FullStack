@@ -445,13 +445,14 @@ const ServicesList = () => {
 
   return (
     <div className="bg-light rounded-4 p-4">
+      {/* <div className="bg-dark rounded-4 p-4"></div> */}
       <div className="text-center mb-4">
         <button className="btn btn-warning fw-bold mb-3">
           🔥 Dịch Vụ Hot Nhất
         </button>
       </div>
 
-      <h2 className="text-center mb-4 fw-bold">Danh Sách Dịch Vụ</h2>
+      <h2 className="text-center mb-4 fw-bold ">Danh Sách Dịch Vụ</h2>
       <p className="text-center text-muted mb-5">
         Khám phá các dịch vụ chuyên nghiệp tại studio
       </p>

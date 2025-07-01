@@ -135,6 +135,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const [showDialog, setShowDialog] = useState(false);
+  console.log(window.location.pathname);
 
   const handleLogout = () => {
     sessionStorage.removeItem("token");
@@ -231,7 +232,7 @@ const Header = () => {
                 <li className="nav-item">
                   <a
                     className="nav-link text-white px-3 py-2 fs-5"
-                    href="/contact"
+                    href="#tab-contact"
                   >
                     Contact
                   </a>
@@ -239,7 +240,7 @@ const Header = () => {
                 <li className="nav-item">
                   <a
                     className="nav-link text-white px-3 py-2 fs-5"
-                    href="/blog"
+                    href="#tab-blog"
                   >
                     Blog
                   </a>

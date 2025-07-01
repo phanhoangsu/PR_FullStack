@@ -193,3 +193,86 @@
 #app_submit:hover {
   background-color: #b08c2f;
 }
+
+/* ContactPage custom style */
+.contact-page-wrapper {
+  background: #181818;
+  padding: 40px 0 60px 0;
+  min-height: 100vh;
+}
+
+.contact-form-block {
+  background: #222;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.18);
+  margin: 0 0 32px 0;
+}
+
+.contact-title {
+  color: #d4af37;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.contact-form-styled {
+  padding: 20px 0 0 0;
+}
+
+.contact-input {
+  background: #181818;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  transition: border 0.2s;
+}
+
+.contact-input:focus {
+  border: 1.5px solid #d4af37;
+  outline: none;
+}
+
+.contact-submit-btn {
+  background: #d4af37;
+  color: #181818;
+  border-radius: 25px;
+  font-weight: bold;
+  padding: 12px 32px;
+  border: none;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: background 0.2s, color 0.2s;
+}
+
+.contact-submit-btn:hover {
+  background: #b08c2f;
+  color: #fff;
+}
+
+/* Style for contact info block */
+.tab-contact.size-1.hsize-1 {
+  background: #222;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.12);
+  color: #fff;
+}
+
+.tab-contact.size-1.hsize-1 h2,
+.tab-contact.size-1.hsize-1 h4 {
+  color: #d4af37;
+}
+
+.tab-contact.size-1.hsize-1 p {
+  color: #eee;
+}
+
+/* Style for map block */
+.blockz-map {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
+}
