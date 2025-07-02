@@ -364,7 +364,7 @@ const ContactPage = () => {
                 className="form-control required"
                 id="subject"
                 name="subject"
-                placeholder="Subject"
+                placeholder="Phone"
                 required
                 style={{
                   width: "100%",
@@ -384,7 +384,7 @@ const ContactPage = () => {
                 className="form-control required"
                 name="message"
                 id="message"
-                placeholder="Message"
+                placeholder="Ghi chú"
                 required
                 style={{
                   width: "100%",
@@ -457,8 +457,8 @@ const ContactPage = () => {
             className="map-overlay"
             style={{ position: "absolute", inset: 0, zIndex: 1 }}
           ></div>
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d8352.985568651915!2d-0.12905994797222892!3d51.50665753790812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47d8a00baf21de75%3A0x52963a5addd52a99!2sLondon%2C+UK!5e0!3m2!1spt-BR!2sbr!4v1443128181953"
+          {/* <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.6460265651194!2d105.8411712145657!3d21.02851178599159!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab2f1f7f6f0b%3A0x2fbe9a58c2e4e676!2zSG_DoG5nIE5oxqE!5e0!3m2!1svi!2s!4v1688219700000!5m2!1svi!2s"
             style={{
               pointerEvents: "none",
               width: "100%",
@@ -469,7 +469,22 @@ const ContactPage = () => {
             }}
             allowFullScreen=""
             title="Google Map"
-          ></iframe>
+          ></iframe> */}
+
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.6460265651194!2d105.8411712145657!3d21.02851178599159!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab2f1f7f6f0b%3A0x2fbe9a58c2e4e676!2zSG_DoG5nIE5oxqE!5e0!3m2!1svi!2s!4v1688219700000!5m2!1svi!2s"
+            style={{
+              pointerEvents: "none",
+              width: "100%",
+              height: "100%",
+              border: "none",
+              position: "relative",
+              zIndex: 0,
+            }}
+            allowFullScreen=""
+            loading="lazy"
+            title="Google Map of Vietnam"
+          />
         </div>
       </div>
 

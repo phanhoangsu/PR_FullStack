@@ -3505,3 +3505,25 @@ a:active,
 a:focus {
   outline: none !important;
 }
+
+.fade-scale-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.fade-scale-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-scale-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.fade-scale-exit-active {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}

@@ -145,7 +145,7 @@ const ServiceDetails = ({ service, open, onClose }) => {
     isActive: service.active,
     createdAt: service.createdAt,
     updatedAt: service.updatedAt,
-    duration: service.duration ?? "30 phút",
+    duration: service.duration ?? "45 phút",
     rating: "4.8",
     features: [
       "Tư vấn kiểu tóc phù hợp",
@@ -205,7 +205,8 @@ const ServiceDetails = ({ service, open, onClose }) => {
               <Text strong>Trạng thái:</Text>{" "}
               <Badge
                 status={serviceDetails.isActive ? "success" : "default"}
-                text={serviceDetails.isActive ? "Đang hoạt động" : "Tạm dừng"}
+                // text={serviceDetails.isActive ? "Đang hoạt động" : "Tạm dừng"}
+                text={serviceDetails.isActive ? "Tạm dừng" : "Đang hoạt động "}
               />
             </Paragraph>
           </div>
