@@ -39,11 +39,26 @@
 
 // export default HeroSection;
 
-import React from "react";
-import introBg from "../../assets/intro.jpg";
+import React, { useEffect, useState } from "react";
 import razorIcon from "../../assets/ico-razor.png";
+import introBg from "../../assets/intro.jpg";
+
+// Import danh sách ảnh nền
+import intro1 from "../../assets/blog/1.jpg";
+import intro2 from "../../assets/blog/2.jpg";
+import intro3 from "../../assets/blog/3.jpg";
 
 const HeroSection = () => {
+  const images = [intro1, intro2, intro3, introBg];
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className="blockz-element-wrapper">
       <div className="blockz-element-content">
@@ -51,13 +66,14 @@ const HeroSection = () => {
           className="blockz-intro active"
           id="intro-item1"
           style={{
-            backgroundImage: `url(${introBg})`,
+            backgroundImage: `url(${images[index]})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            height: "100vh", // bạn có thể điều chỉnh chiều cao nếu muốn
+            transition: "background-image 1s ease-in-out",
+            height: "100vh",
           }}
         >
-          <div className="blockz-intro-mask">
+          <div className="blockz-intro-mask bg-black bg-opacity-50 h-full w-full flex justify-center items-center">
             <div className="blockz-intro-content text-white text-center">
               <div className="blockz-intro-bar mb-4">
                 <img
@@ -66,10 +82,10 @@ const HeroSection = () => {
                   style={{ width: "80px", height: "auto" }}
                 />
               </div>
-              <h2 className="blockz-intro-title text-4xl font-bold">
+              <h2 className="blockz-intro-title text-4xl font-bold drop-shadow-lg">
                 For Lovers of Beards
               </h2>
-              <p className="blockz-intro-title2 text-lg mt-2">
+              <p className="blockz-intro-title2 text-lg mt-2 drop-shadow-md">
                 The Best Barber Shop since 1956
               </p>
             </div>

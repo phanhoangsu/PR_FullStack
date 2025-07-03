@@ -27,4 +27,29 @@ public class AppointmentApi {
         AppointmentResponse response = appointmentService.createAppointment(request, username);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    public ResponseEntity<?> getMyAppointments(@AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        return ResponseEntity.ok(appointmentService.getAppointmentsByUsername(username));
+    }
+
+    @PutMapping("/{id}/cancel")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    public ResponseEntity<?> cancelAppointment(@PathVariable Integer id,
+                                               @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        boolean success = appointmentService.cancelAppointment(id, username);
+        return success
+                ? ResponseEntity.ok("Đã hủy lịch hẹn.")
+                : ResponseEntity.badRequest().body("Không thể hủy lịch hẹn.");
+    }
+    // Dành cho admin hoặc nhân viên
+    @GetMapping("/all")
+ @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')")
+    public ResponseEntity<?> getAllAppointments() {
+        return ResponseEntity.ok(appointmentService.getAllAppointments());
+    }
+
 }

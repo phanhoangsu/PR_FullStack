@@ -114,63 +114,93 @@
 
 // // // // export default ServicePage;
 
-// // // import React, { useState } from "react";
-// // // import HeroSection from "../components/services/HeroSection";
-// // // import StatsCards from "../components/services/StatsCards";
-// // // import ServicesList from "../components/services/ServicesList";
-// // // import Header from "../components/services/Header";
-// // // import ContactPage from "./ContactPage";
-// // // import PricesSection from "../components/services/PricesSection";
-// // // import AboutSection from "../components/services/AboutSection";
+// import React, { useState } from "react";
+// import ImgBody from "../assets/body-bg.jpg";
 
-// // // const ServicePage = () => {
-// // //   const [activeTab, setActiveTab] = useState("home"); // Mặc định tab là "home"
+// import HeroSection from "../components/services/HeroSection";
+// import StatsCards from "../components/services/StatsCards";
+// import ServicesList from "../components/services/ServicesList";
+// import Header from "../components/services/Header";
+// import ContactPage from "./ContactPage";
+// import PricesSection from "../components/services/PricesSection";
+// import AboutSection from "../components/services/AboutSection";
 
-// // //   return (
-// // //     <div className="min-h-screen">
-// // //       <Header onTabChange={setActiveTab} /> {/* ✅ Truyền props xuống */}
-// // //       {/* Chỉ render phần tương ứng với tab được chọn */}
-// // //       {activeTab === "home" && (
-// // //         <>
-// // //           <HeroSection />
-// // //           <StatsCards />
-// // //           <ServicesList />
-// // //           <PricesSection />
-// // //         </>
-// // //       )}
-// // //       {activeTab === "about" && <AboutSection />}
-// // //       {activeTab === "contact" && <ContactPage />}
-// // //       {/* Footer luôn hiển thị */}
-// // //       <footer id="footer">
-// // //         <div id="footer-top">
-// // //           <div className="container">
-// // //             <ul className="social-footer">
-// // //               {/* ...các icon mạng xã hội... */}
-// // //             </ul>
-// // //             <p className="footer-quote">
-// // //               "People Who Are Crazy Enough To Think They Can Change The World,
-// // //               Are The Ones Who Do."
-// // //               <br />
-// // //               <span className="footer-quote-author">Rob Siltanen</span>
-// // //             </p>
-// // //           </div>
-// // //         </div>
-// // //         <div id="footer-bottom">
-// // //           <div className="container">
-// // //             <p className="footer-bottom-text2">
-// // //               <span>
-// // //                 © 2017, Beardz by <a href="http://www.dotrex.co/">DotRex</a>.
-// // //                 All Rights Reserved.
-// // //               </span>
-// // //             </p>
-// // //           </div>
-// // //         </div>
-// // //       </footer>
-// // //     </div>
-// // //   );
-// // // };
+// import { CSSTransition, TransitionGroup } from "react-transition-group";
+// import "../css/style.css";
 
-// // // export default ServicePage;
+// const ServicePage = () => {
+//   const [activeTab, setActiveTab] = useState("home");
+
+//   const renderTabContent = () => {
+//     switch (activeTab) {
+//       case "home":
+//         return (
+//           <>
+//             <HeroSection />
+//             <StatsCards />
+//             <ServicesList />
+//             <PricesSection />
+//           </>
+//         );
+//       case "about":
+//         return <AboutSection />;
+//       case "contact":
+//         return <ContactPage />;
+//       case "services":
+//         return <ServicesList />;
+//       case "prices":
+//         return <PricesSection />;
+//       default:
+//         return null;
+//     }
+//   };
+
+//   return (
+//     <div
+//       className="min-h-screen relative overflow-hidden"
+//       style={{
+//         backgroundImage: `url(${ImgBody})`,
+//         backgroundSize: "cover",
+//         backgroundPosition: "center",
+//         backgroundRepeat: "no-repeat",
+//       }}
+//     >
+//       <Header onTabChange={setActiveTab} />
+//       <TransitionGroup component={null}>
+//         <CSSTransition key={activeTab} timeout={800} classNames="fade-scale">
+//           <div className="absolute left-0 top-0 w-full z-10 px-4">
+//             {renderTabContent()}
+//           </div>
+//         </CSSTransition>
+//       </TransitionGroup>
+//       <footer id="footer" className="relative z-0 pt-10">
+//         <div id="footer-top">
+//           <div className="container">
+//             <ul className="social-footer">{/* Social icons*/}</ul>
+//             <p className="footer-quote">
+//               "People Who Are Crazy Enough To Think They Can Change The World,
+//               Are The Ones Who Do."
+//               <br />
+//               <span className="footer-quote-author">Rob Siltanen</span>
+//             </p>
+//           </div>
+//         </div>
+//         <div id="footer-bottom">
+//           <div className="container">
+//             <p className="footer-bottom-text2">
+//               <span>
+//                 © 2017, Beardz by <a href="http://www.dotrex.co/">DotRex</a>.
+//                 All Rights Reserved.
+//               </span>
+//             </p>
+//           </div>
+//         </div>
+//       </footer>
+//     </div>
+//   );
+// };
+
+// export default ServicePage;
 
 import React, { useState } from "react";
 import ImgBody from "../assets/body-bg.jpg";
@@ -195,7 +225,7 @@ const ServicePage = () => {
         return (
           <>
             <HeroSection />
-            <StatsCards />
+            {/* <StatsCards /> */}
             <ServicesList />
             <PricesSection />
           </>
@@ -224,7 +254,6 @@ const ServicePage = () => {
       }}
     >
       <Header onTabChange={setActiveTab} />
-
       <TransitionGroup component={null}>
         <CSSTransition key={activeTab} timeout={800} classNames="fade-scale">
           <div className="absolute left-0 top-0 w-full z-10 px-4">
@@ -233,25 +262,88 @@ const ServicePage = () => {
         </CSSTransition>
       </TransitionGroup>
 
-      <footer id="footer" className="relative z-0 pt-10">
+      {/* FOOTER */}
+      <footer id="footer" className="relative z-0 pt-10 mt-10">
         <div id="footer-top">
-          <div className="container">
-            <ul className="social-footer">{/* Social icons */}</ul>
-            <p className="footer-quote">
+          <div className="container mx-auto text-center">
+            <ul className="social-footer flex justify-center gap-6 mb-6">
+              <li>
+                <a
+                  href="https://www.facebook.com"
+                  className="text-blue-600 hover:text-blue-800 text-2xl transition transform hover:scale-125"
+                  title="Facebook"
+                >
+                  <i className="fa fa-facebook"></i>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="LinkedIn"
+                  className="text-blue-700 hover:text-blue-900 text-2xl transition transform hover:scale-125"
+                >
+                  <i className="fa fa-linkedin"></i>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://zalo.me"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Zalo"
+                  className="transition transform hover:scale-125"
+                >
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg"
+                    alt="Zalo"
+                    className="w-6 h-6 inline"
+                  />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://twitter.com"
+                  className="text-blue-400 hover:text-blue-600 text-2xl transition transform hover:scale-125"
+                  title="Twitter"
+                >
+                  <i className="fa fa-twitter"></i>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  className="text-pink-500 hover:text-pink-700 text-2xl transition transform hover:scale-125"
+                  title="Dribbble"
+                >
+                  <i className="fa fa-dribbble"></i>
+                </a>
+              </li>
+            </ul>
+
+            <p className="footer-quote text-white italic text-base px-4 mb-6">
               "People Who Are Crazy Enough To Think They Can Change The World,
               Are The Ones Who Do."
               <br />
-              <span className="footer-quote-author">Rob Siltanen</span>
+              <span className="footer-quote-author font-semibold text-sm">
+                Rob Siltanen
+              </span>
             </p>
           </div>
         </div>
-        <div id="footer-bottom">
-          <div className="container">
+
+        <div id="footer-bottom" className="bg-black bg-opacity-60 py-4">
+          <div className="container mx-auto text-center text-white text-sm">
             <p className="footer-bottom-text2">
-              <span>
-                © 2017, Beardz by <a href="http://www.dotrex.co/">DotRex</a>.
-                All Rights Reserved.
-              </span>
+              © 2017, Beardz by{" "}
+              <a
+                href="http://www.dotrex.co/"
+                className="underline hover:text-gray-300"
+              >
+                DotRex
+              </a>
+              . All Rights Reserved.
             </p>
           </div>
         </div>

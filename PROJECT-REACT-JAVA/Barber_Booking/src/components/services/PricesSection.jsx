@@ -222,6 +222,21 @@ const pricesData = [
     description: "Basic haircut for a fresh look.",
   },
   {
+    name: "Hair Trim",
+    price: "$25",
+    description: "Basic haircut for a fresh look.",
+  },
+  {
+    name: "Hair Trim",
+    price: "$25",
+    description: "Basic haircut for a fresh look.",
+  },
+  {
+    name: "Hair Trim",
+    price: "$25",
+    description: "Basic haircut for a fresh look.",
+  },
+  {
     name: "Beard Trim",
     price: "$20",
     description: "Professional beard shaping and trimming.",
