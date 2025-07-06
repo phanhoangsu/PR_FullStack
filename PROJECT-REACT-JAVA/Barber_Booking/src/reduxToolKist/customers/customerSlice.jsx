@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { http } from "../api/AxiosInstance";
+import { getAuthHeaders } from "../utils/authHeader";
 
 export const getAllCustomers = createAsyncThunk("customer/getAll", async () => {
   const res = await http.get("customers"); // baseURL đã là /api/
@@ -7,14 +8,18 @@ export const getAllCustomers = createAsyncThunk("customer/getAll", async () => {
 });
 
 export const addCustomer = createAsyncThunk("customer/add", async (data) => {
-  const res = await http.post("customers", data);
+  const res = await http.post("customers", data, getAuthHeaders());
   return res.data;
 });
 
 export const editCustomer = createAsyncThunk(
   "customer/edit",
   async ({ phoneNumber, data }) => {
-    const res = await http.put(`customers/${phoneNumber}`, data);
+    const res = await http.put(
+      `customers/${phoneNumber}`,
+      data,
+      getAuthHeaders()
+    );
     return res.data;
   }
 );
@@ -22,7 +27,7 @@ export const editCustomer = createAsyncThunk(
 export const deleteCustomer = createAsyncThunk(
   "customer/delete",
   async (phoneNumber) => {
-    await http.delete(`customers/${phoneNumber}`);
+    await http.delete(`customers/${phoneNumber}`, getAuthHeaders());
     return { phoneNumber };
   }
 );

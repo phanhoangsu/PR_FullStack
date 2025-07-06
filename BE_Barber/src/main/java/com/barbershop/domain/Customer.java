@@ -25,9 +25,12 @@ public class Customer {
     @Column(name = "email", length = 100)
     private String email;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
+//    @ColumnDefault("CURRENT_TIMESTAMP")
+//    @Column(name = "created_at")
+//    private Timestamp createdAt;
+
     @Column(name = "created_at")
-    private Timestamp createdAt;
+    private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 
 
     @OneToMany(mappedBy = "phoneNumber")

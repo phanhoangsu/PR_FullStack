@@ -11,5 +11,6 @@ public interface AppointmentService {
     List<AppointmentResponse> getAppointmentsByUsername(String username);
     boolean cancelAppointment(Integer id, String username);
     List<AppointmentResponse> getAllAppointments();
+    boolean deleteAppointment(Integer id, String username);
 
 }

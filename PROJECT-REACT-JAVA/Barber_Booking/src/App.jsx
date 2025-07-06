@@ -4,7 +4,6 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import AuthForm from "./components/Login/AuthForm";
 import ServicePage from "./pages/ServicePage";
 import AdminPage from "./pages/AdminPage";
-import ComboManager from "./components/admin/ComboManager";
 import BillPages from "./pages/BillPages";
 import CartPage from "./pages/CartPage";
 
@@ -20,9 +19,9 @@ function App() {
 
       <Route path="/cart" element={<CartPage />} />
 
-      <Route path="/admin" element={<AdminPage />} />
-      <Route path="/admin/combo" element={<ComboManager />} />
       <Route path="/bill" element={<BillPages />} />
+
+      <Route path="/admin" element={<AdminPage />} />
     </Routes>
   );
 }

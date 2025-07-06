@@ -29,14 +29,14 @@ public class AppointmentApi {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> getMyAppointments(@AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
         return ResponseEntity.ok(appointmentService.getAppointmentsByUsername(username));
     }
 
     @PutMapping("/{id}/cancel")
-    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @PreAuthorize("hasRole('ROLE_CUSTOMER') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> cancelAppointment(@PathVariable Integer id,
                                                @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
@@ -45,11 +45,24 @@ public class AppointmentApi {
                 ? ResponseEntity.ok("Đã hủy lịch hẹn.")
                 : ResponseEntity.badRequest().body("Không thể hủy lịch hẹn.");
     }
+
     // Dành cho admin hoặc nhân viên
     @GetMapping("/all")
- @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')")
     public ResponseEntity<?> getAllAppointments() {
         return ResponseEntity.ok(appointmentService.getAllAppointments());
+    }
+
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize(" hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> deleteAppointment(@PathVariable Integer id,
+                                               @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        boolean deleted = appointmentService.deleteAppointment(id, username);
+        return deleted
+                ? ResponseEntity.ok("Đã xóa lịch hẹn.")
+                : ResponseEntity.badRequest().body("Không thể xóa lịch hẹn.");
     }
 
 }

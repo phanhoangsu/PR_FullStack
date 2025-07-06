@@ -163,8 +163,6 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
 
 
-
-
 //        return new AppointmentResponse(saved.getId(), saved.getStatus(), "Đã đặt lịch thành công");
 
         return new AppointmentResponse(
@@ -208,7 +206,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
 
-
     @Override
     public boolean cancelAppointment(Integer id, String username) {
         Optional<Appointment> optional = appointmentRepository.findById(id);
@@ -241,7 +238,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
 
-
     @Override
     public List<AppointmentResponse> getAllAppointments() {
         List<Appointment> appointments = appointmentRepository.findAll();
@@ -259,5 +255,55 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public boolean deleteAppointment(Integer id, String username) {
+        Optional<Appointment> optional = appointmentRepository.findById(id);
+        if (optional.isEmpty()) {
+            log.warn(">>> Không tìm thấy lịch hẹn ID = {}", id);
+            return false;
+        }
+
+        Appointment appointment = optional.get();
+
+        // Lấy user
+        Optional<UserEntity> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            log.warn(">>> Không tìm thấy user với username = {}", username);
+            return false;
+        }
+
+        UserEntity user = userOptional.get();
+
+        // ✅ Lấy roleName từ danh sách UserRole
+        boolean isAdmin = user.getRoles().stream()
+                .map(UserRole::getRole) // lấy Role
+                .map(Role::getRoleName) // lấy roleName
+                .anyMatch(name -> "ROLE_ADMIN".equals(name.trim())); // so sánh
+
+        if (isAdmin) {
+            log.info(">>> ADMIN '{}' đang xóa lịch hẹn ID = {}", username, id);
+            appointmentRepository.delete(appointment);
+            return true;
+        }
+
+        // Nếu không phải admin → xác minh lịch hẹn thuộc user
+        Customer customer = customerRepository.findByUser_Username(username).orElse(null);
+        if (customer == null) {
+            log.warn(">>> Không tìm thấy customer với username = {}", username);
+            return false;
+        }
+
+        if (!appointment.getPhoneNumber().getPhoneNumber().equals(customer.getPhoneNumber())) {
+            log.warn(">>> Lịch hẹn không thuộc về user: {}, phone DB = {}, phone user = {}",
+                    username,
+                    appointment.getPhoneNumber().getPhoneNumber(),
+                    customer.getPhoneNumber());
+            return false;
+        }
+
+        log.info(">>> KHÁCH HÀNG '{}' đang xóa lịch hẹn ID = {}", username, id);
+        appointmentRepository.delete(appointment);
+        return true;
+    }
 
 }

@@ -12,6 +12,8 @@ import com.barbershop.repository.UserRepository;
 import com.barbershop.service.CustomerSevice;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,60 +35,8 @@ public class CustomerServiceImpl implements CustomerSevice {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+    private final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
-//    @Transactional
-//    @Override
-//    public CustomerResponse save(CustomerRequest request) {
-//        CustomerResponse response = new CustomerResponse();
-//        try {
-//            // Kiểm tra trùng số điện thoại
-//            if (customerRepository.existsById(request.getPhoneNumber())) {
-//                throw new BarberException(CustomerErrorCode.DUPLICATE_PHONE);
-//            }
-//            // Kiểm tra trùng email
-//            if (customerRepository.existsByEmail(request.getEmail())) {
-//                throw new BarberException(CustomerErrorCode.DUPLICATE_EMAIL);
-//            }
-//
-//
-//            // Tạo UserEntity
-//            UserEntity newUser = new UserEntity();
-//            newUser.setUsername(request.getPhoneNumber());
-//            newUser.setPasswordHash(passwordEncoder.encode(request.getPasswordHash()));
-//
-//            // Gán vai trò ROLE_USER
-//            Role userRole = roleRepository.findByRoleName("ROLE_CUSTOMER")
-//                    .orElseThrow(() -> new BarberException(CustomerErrorCode.SYSTEM_ERROR));
-//            UserRole userRoleLink = new UserRole();
-//            userRoleLink.setUser(newUser);
-//            userRoleLink.setRole(userRole);
-//            userRoleLink.setId(new UserRoleId(null, userRole.getId()));
-//            newUser.getRoles().add(userRoleLink);
-//            userRepository.save(newUser);
-//
-//            // Lưu khách hàng
-//            Customer customer = modelMapper.map(request, Customer.class);
-//            customer.setUser(newUser);
-//            customer.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-//            Customer saved = customerRepository.save(customer);
-//
-//            // Tạo phản hồi
-//            response = modelMapper.map(saved, CustomerResponse.class);
-//            List<String> roles = newUser.getRoles().stream()
-//                    .map(link -> link.getRole().getRoleName())
-//                    .collect(Collectors.toList());
-//            response.setRoles(roles);
-//            response.setErrorCode(CustomerErrorCode.CREATE_SUCCESS);
-//            response.setErrorMessage(ErrorMessageLoader.getProperty(CustomerErrorCode.CREATE_SUCCESS));
-//        } catch (BarberException e) {
-//            response.setErrorCode(e.getErrorMessage().getErrorCode());
-//            response.setErrorMessage(ErrorMessageLoader.getProperty(e.getErrorMessage().getErrorCode()));
-//        } catch (Exception e) {
-//            response.setErrorCode(CustomerErrorCode.CREATE_FAILURE);
-//            response.setErrorMessage(ErrorMessageLoader.getProperty(CustomerErrorCode.CREATE_FAILURE));
-//        }
-//        return response;
-//    }
 
     @Transactional
     @Override

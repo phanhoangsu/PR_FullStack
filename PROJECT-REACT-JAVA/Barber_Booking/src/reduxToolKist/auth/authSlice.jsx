@@ -29,6 +29,17 @@ export const login = createAsyncThunk(
   }
 );
 
+// export const register = createAsyncThunk(
+//   "auth/register",
+//   async (data, { rejectWithValue }) => {
+//     try {
+//       const res = await AuthService.register(data);
+//       return res.data;
+//     } catch (err) {
+//       return rejectWithValue(err.response?.data || "Đăng ký thất bại");
+//     }
+//   }
+// );
 export const register = createAsyncThunk(
   "auth/register",
   async (data, { rejectWithValue }) => {
@@ -36,7 +47,14 @@ export const register = createAsyncThunk(
       const res = await AuthService.register(data);
       return res.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data || "Đăng ký thất bại");
+      // ✅ Ưu tiên lấy message từ API backend nếu có
+      const errorMessage =
+        err.response?.data?.message ||
+        (typeof err.response?.data === "string"
+          ? err.response.data
+          : "Đăng ký thất bại");
+
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -92,6 +110,10 @@ const authSlice = createSlice({
         state.success = "Đăng ký thành công";
       })
       .addCase(login.rejected, register.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

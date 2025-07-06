@@ -106,9 +106,9 @@ const CustomerManagement = () => {
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">Quản lý khách hàng</h2>
-        <Button type="primary" onClick={openAddModal}>
+        {/* <Button type="primary" onClick={openAddModal}>
           ➕ Thêm khách hàng
-        </Button>
+        </Button> */}
       </div>
 
       <Table
