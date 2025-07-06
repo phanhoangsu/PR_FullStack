@@ -3,10 +3,10 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import AuthForm from "./components/Login/AuthForm";
 import ServicePage from "./pages/ServicePage";
-import StaffList from "./components/staff/StaffList";
 import AdminPage from "./pages/AdminPage";
 import ComboManager from "./components/admin/ComboManager";
-import AboutSection from "./components/services/AboutSection";
+import BillPages from "./pages/BillPages";
+import CartPage from "./pages/CartPage";
 
 function App() {
   const token = useSelector((state) => state.auth.token);
@@ -17,15 +17,12 @@ function App() {
       <Route path="/login" element={<AuthForm />} />
       <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
       <Route path="/services" element={<ServicePage />} />
-      {/* Trang chính yêu cầu đã đăng Nhập */}
-      <Route
-        path="/staff"
-        element={token ? <StaffList /> : <Navigate to="/login" replace />}
-      />
+
+      <Route path="/cart" element={<CartPage />} />
 
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/admin/combo" element={<ComboManager />} />
-      {/* <Route path="/about" element={<AboutSection />} /> */}
+      <Route path="/bill" element={<BillPages />} />
     </Routes>
   );
 }

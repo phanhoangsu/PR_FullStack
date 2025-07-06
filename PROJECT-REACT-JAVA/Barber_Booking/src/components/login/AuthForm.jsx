@@ -52,8 +52,15 @@ const AuthForm = () => {
     dispatch(login(values));
   };
 
+  // const onRegister = (values) => {
+  //   dispatch(register(values));
+  // };
   const onRegister = (values) => {
-    dispatch(register(values));
+    const dataWithFullName = {
+      ...values,
+      fullName: values.username, // ✅ Tự động gán fullName
+    };
+    dispatch(register(dataWithFullName));
   };
 
   const onForgotPassword = async (values) => {
@@ -109,14 +116,6 @@ const AuthForm = () => {
 
         <TabPane tab="Đăng ký" key="2">
           <Form form={registerForm} layout="vertical" onFinish={onRegister}>
-            {/* <Form.Item
-              label="Họ và tên"
-              name="fullName"
-              rules={[{ required: true, message: "Vui lòng nhập họ và tên" }]}
-            >
-              <Input placeholder="Nhập họ và tên" />
-            </Form.Item> */}
-
             <Form.Item
               label="Tên đăng nhập"
               name="username"
