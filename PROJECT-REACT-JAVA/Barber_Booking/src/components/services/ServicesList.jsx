@@ -348,6 +348,10 @@ const ServicesList = () => {
     dispatch(getAllProducts());
   }, [dispatch]);
 
+  useEffect(() => {
+    console.log("SERVICES:", services);
+  }, [services]);
+
   // Đặt lịch dịch vụ
   const handleBookingClick = (service) => {
     if (!token) {

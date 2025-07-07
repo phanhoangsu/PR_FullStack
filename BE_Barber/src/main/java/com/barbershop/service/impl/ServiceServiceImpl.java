@@ -63,6 +63,10 @@ public class ServiceServiceImpl implements ServiceService {
             entity.setDescription(request.getDescription());
             entity.setPrice(request.getPrice());
             entity.setImageUrl(request.getImageUrl());
+
+//            // ✅ Cập nhật trạng thái hoạt động
+//            entity.setIsActive(request.getIsActive());
+
             entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 
             serviceRepository.save(entity);

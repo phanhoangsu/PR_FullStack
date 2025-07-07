@@ -12,4 +12,8 @@ import java.util.List;
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
     boolean existsByStaffAndStartTime(Staff staff, Timestamp startTime);
     List<Appointment> findByPhoneNumber_PhoneNumber(String phoneNumberPhoneNumber);
+
+    List<Appointment> findByStaff_IdAndStartTimeBetween(Integer staffId, Timestamp start, Timestamp end);
+
+    List<Appointment> findByStaff_Id(Integer staffId);
 }

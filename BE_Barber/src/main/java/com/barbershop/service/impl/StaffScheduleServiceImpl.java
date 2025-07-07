@@ -1,23 +1,28 @@
 package com.barbershop.service.impl;
 
 
+import com.barbershop.domain.Appointment;
 import com.barbershop.exception.BarberException;
 import com.barbershop.domain.Staff;
 import com.barbershop.domain.StaffSchedule;
 import com.barbershop.model.request.StaffScheduleRequest;
 import com.barbershop.model.response.StaffScheduleResponse;
+import com.barbershop.repository.AppointmentRepository;
 import com.barbershop.repository.StaffRepository;
 import com.barbershop.repository.StaffScheduleRepository;
 import com.barbershop.service.StaffScheduleService;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
@@ -32,6 +37,8 @@ public class StaffScheduleServiceImpl implements StaffScheduleService {
     private final StaffScheduleRepository staffScheduleRepository;
     private final StaffRepository staffRepository;
     private final ModelMapper modelMapper;
+    private final AppointmentRepository appointmentRepository;
+    private final Logger logger = LoggerFactory.getLogger(StaffScheduleServiceImpl.class);
 
 
     @Override
@@ -47,13 +54,78 @@ public class StaffScheduleServiceImpl implements StaffScheduleService {
         return modelMapper.map(saved, StaffScheduleResponse.class);
     }
 
-    @Override
-    public List<StaffScheduleResponse> findAll() {
-//        return staffScheduleRepository.findAll().stream().map(sc -> modelMapper.map(sc, StaffScheduleResponse.class)).collect(Collectors.toList());
-        return staffScheduleRepository.findAll().stream()
-                .map(this::toResponse)
+//    @Override
+//    public List<StaffScheduleResponse> findAll() {
+////        return staffScheduleRepository.findAll().stream().map(sc -> modelMapper.map(sc, StaffScheduleResponse.class)).collect(Collectors.toList());
+//        return staffScheduleRepository.findAll().stream()
+//                .map(this::toResponse)
+//                .collect(Collectors.toList());
+//    }
+
+@Override
+public List<StaffScheduleResponse> findAll() {
+    logger.info("📥 Bắt đầu lấy danh sách lịch làm việc của tất cả nhân viên");
+    try {
+        List<StaffSchedule> schedules = staffScheduleRepository.findAll();
+        List<StaffScheduleResponse> result = schedules.stream()
+                .map(this::toResponseWithAppointments)
                 .collect(Collectors.toList());
+
+        logger.info("✅ Lấy danh sách lịch làm việc thành công, tổng số lịch: {}", result.size());
+        return result;
+    } catch (Exception e) {
+        logger.error("❌ Lỗi khi lấy danh sách lịch làm việc: ", e);
+        return List.of();
     }
+}
+
+
+
+
+    private StaffScheduleResponse toResponseWithAppointments(StaffSchedule schedule) {
+        StaffScheduleResponse res = new StaffScheduleResponse();
+        res.setId(schedule.getId());
+        res.setStartTime(schedule.getStartTime());
+        res.setEndTime(schedule.getEndTime());
+
+        if (schedule.getStaff() != null) {
+            res.setStaffId(schedule.getStaff().getId());
+            res.setStaffName(schedule.getStaff().getFullName());
+            res.setStaffAvatar(schedule.getStaff().getAvatarUrl());
+
+            try {
+                // ✅ Lấy toàn bộ lịch hẹn của nhân viên
+                List<Appointment> appointments = appointmentRepository.findByStaff_Id(schedule.getStaff().getId());
+
+                logger.info("📅 Nhân viên ID {} có {} lịch hẹn",
+                        schedule.getStaff().getId(),
+                        appointments.size());
+
+                List<StaffScheduleResponse.AppointmentSimpleResponse> appointmentResponses = appointments.stream()
+                        .map(a -> {
+                            StaffScheduleResponse.AppointmentSimpleResponse appRes = new StaffScheduleResponse.AppointmentSimpleResponse();
+                            appRes.setId(a.getId());
+                            appRes.setStatus(a.getStatus());
+                            appRes.setNote(a.getNote());
+                            appRes.setStartTime(a.getStartTime());
+                            return appRes;
+                        })
+                        .collect(Collectors.toList());
+
+                res.setAppointments(appointmentResponses);
+            } catch (Exception ex) {
+                logger.error("❌ Lỗi khi lấy lịch hẹn của nhân viên ID {}: {}", schedule.getStaff().getId(), ex.getMessage());
+                res.setAppointments(List.of());
+            }
+        } else {
+            logger.warn("⚠️ Lịch làm việc không có nhân viên (scheduleId = {})", schedule.getId());
+            res.setAppointments(List.of());
+        }
+
+        return res;
+    }
+
+
 
     @Override
     public StaffScheduleResponse findById(Integer id) {

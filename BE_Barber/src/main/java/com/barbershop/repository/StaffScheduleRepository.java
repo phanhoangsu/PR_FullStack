@@ -13,10 +13,12 @@ import java.util.List;
 public interface StaffScheduleRepository extends JpaRepository<StaffSchedule, Integer> {
     List<StaffSchedule> findByStaffId(Integer id);
 
-    // Truy vấn tối ưu
+    // Truy vấn tối ưu để check lịch trùng
     @Query("SELECT s FROM StaffSchedule s WHERE s.staff.id = :staffId AND " +
             "(s.startTime < :endTime AND s.endTime > :startTime)")
     List<StaffSchedule> findConflictingSchedules(@Param("staffId") Integer staffId,
                                                  @Param("startTime") Timestamp startTime,
                                                  @Param("endTime") Timestamp endTime);
+
+
 }

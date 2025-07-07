@@ -64,14 +64,76 @@ public class BillServiceImpl implements BillService {
         }
     }
 
+//    @Override
+//    public BillResponse createBill(BillCreateRequest request) {
+//        try {
+//            Bill bill = new Bill();
+//
+//            Customer customer = customerRepository.findById(request.getPhoneNumber())
+//                    .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
+//            bill.setPhoneNumber(customer);
+//            bill.setNote(request.getNote());
+//            bill.setPaymentMethod(request.getPaymentMethod());
+//            bill.setStatus("Chưa thanh toán");
+//            bill.setBillDate(Timestamp.from(Instant.now()));
+//
+//            if (request.getAppointmentId() != null) {
+//                bill.setAppointment(appointmentRepository.findById(request.getAppointmentId()).orElse(null));
+//            }
+//
+//            if (request.getCreatedBy() != null) {
+//                bill.setCreatedBy(userRepository.findById(request.getCreatedBy()).orElse(null));
+//            }
+//
+//            bill = billRepository.save(bill);
+//
+//            BigDecimal totalAmount = BigDecimal.ZERO;
+//
+//            for (BillItemCreateRequest itemReq : request.getItems()) {
+//                BillItem item = new BillItem();
+//                item.setBill(bill);
+//                item.setQuantity(itemReq.getQuantity());
+//                item.setUnitPrice(itemReq.getUnitPrice());
+//                item.setNote(itemReq.getNote());
+//
+//                if (itemReq.getServiceId() != null) {
+//                    item.setService(serviceRepository.findById(itemReq.getServiceId()).orElse(null));
+//                }
+//                if (itemReq.getProductId() != null) {
+//                    item.setProduct(productRepository.findById(itemReq.getProductId()).orElse(null));
+//                }
+//                if (itemReq.getStaffId() != null) {
+//                    item.setStaff(staffRepository.findById(itemReq.getStaffId()).orElse(null));
+//                }
+//
+//                BigDecimal total = itemReq.getUnitPrice().multiply(BigDecimal.valueOf(itemReq.getQuantity()));
+//                item.setTotalPrice(total);
+//                totalAmount = totalAmount.add(total);
+//
+//                billItemRepository.save(item);
+//            }
+//
+//            bill.setTotalAmount(totalAmount);
+//            bill.setFinalTotal(totalAmount);
+//            billRepository.save(bill);
+//
+//            return getBillId(bill.getId());
+//        } catch (Exception e) {
+//            throw new RuntimeException("Lỗi khi tạo hóa đơn: " + e.getMessage(), e);
+//        }
+//    }
+
+    /// ////////////////////////
     @Override
     public BillResponse createBill(BillCreateRequest request) {
         try {
             Bill bill = new Bill();
 
+            // Lấy Customer theo phoneNumber
             Customer customer = customerRepository.findById(request.getPhoneNumber())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
             bill.setPhoneNumber(customer);
+
             bill.setNote(request.getNote());
             bill.setPaymentMethod(request.getPaymentMethod());
             bill.setStatus("Chưa thanh toán");
@@ -85,10 +147,18 @@ public class BillServiceImpl implements BillService {
                 bill.setCreatedBy(userRepository.findById(request.getCreatedBy()).orElse(null));
             }
 
+            // Tính tổng tiền tổng (totalAmount) trước khi lưu Bill
+            BigDecimal totalAmount = BigDecimal.ZERO;
+            for (BillItemCreateRequest itemReq : request.getItems()) {
+                BigDecimal itemTotal = itemReq.getUnitPrice().multiply(BigDecimal.valueOf(itemReq.getQuantity()));
+                totalAmount = totalAmount.add(itemTotal);
+            }
+            bill.setTotalAmount(totalAmount);
+
+            // Lưu Bill (finalTotal DB tự tính, không set)
             bill = billRepository.save(bill);
 
-            BigDecimal totalAmount = BigDecimal.ZERO;
-
+            // Lưu từng BillItem, không set totalPrice (DB tự tính)
             for (BillItemCreateRequest itemReq : request.getItems()) {
                 BillItem item = new BillItem();
                 item.setBill(bill);
@@ -106,20 +176,68 @@ public class BillServiceImpl implements BillService {
                     item.setStaff(staffRepository.findById(itemReq.getStaffId()).orElse(null));
                 }
 
-                BigDecimal total = itemReq.getUnitPrice().multiply(BigDecimal.valueOf(itemReq.getQuantity()));
-                item.setTotalPrice(total);
-                totalAmount = totalAmount.add(total);
-
                 billItemRepository.save(item);
             }
 
-            bill.setTotalAmount(totalAmount);
-            bill.setFinalTotal(totalAmount);
-            billRepository.save(bill);
-
+            // Trả về BillResponse đầy đủ
             return getBillId(bill.getId());
+
         } catch (Exception e) {
             throw new RuntimeException("Lỗi khi tạo hóa đơn: " + e.getMessage(), e);
         }
     }
+
+
+
+    //    @Override
+//    public List<BillResponse> getBillsByPhone(String phone) {
+//        List<Bill> bills = billRepository.findAllByPhoneNumber_PhoneNumber(phone);
+//        return bills.stream()
+//                .map(bill -> {
+//                    BillResponse res = modelMapper.map(bill, BillResponse.class);
+//                    res.setPhoneNumber(bill.getPhoneNumber().getPhoneNumber());
+//
+//                    List<BillItemResponse> items = bill.getBillItems().stream().map(item -> {
+//                        BillItemResponse i = new BillItemResponse();
+//                        i.setServiceName(item.getService() != null ? item.getService().getServiceName() : null);
+//                        i.setProductName(item.getProduct() != null ? item.getProduct().getTitle() : null);
+//                        i.setQuantity(item.getQuantity());
+//                        i.setUnitPrice(item.getUnitPrice());
+//                        i.setTotalPrice(item.getTotalPrice());
+//                        i.setStaffName(item.getStaff() != null ? item.getStaff().getFullName() : null);
+//                        i.setNote(item.getNote());
+//                        return i;
+//                    }).toList();
+//
+//                    res.setItems(items);
+//                    return res;
+//                })
+//                .toList();
+//    }
+@Override
+public List<BillResponse> getBillsByPhone(String phone) {
+    List<Bill> bills = billRepository.findAllByPhoneNumber_PhoneNumber(phone); // 👈 dùng phone để tìm
+    return bills.stream().map(this::mapToResponse).toList(); // map từng cái
+}
+
+    private BillResponse mapToResponse(Bill bill) {
+        BillResponse res = modelMapper.map(bill, BillResponse.class);
+        res.setPhoneNumber(bill.getPhoneNumber().getPhoneNumber());
+
+        List<BillItemResponse> items = bill.getBillItems().stream().map(item -> {
+            BillItemResponse i = new BillItemResponse();
+            i.setServiceName(item.getService() != null ? item.getService().getServiceName() : null);
+            i.setProductName(item.getProduct() != null ? item.getProduct().getTitle() : null);
+            i.setQuantity(item.getQuantity());
+            i.setUnitPrice(item.getUnitPrice());
+            i.setTotalPrice(item.getTotalPrice());
+            i.setStaffName(item.getStaff() != null ? item.getStaff().getFullName() : null);
+            i.setNote(item.getNote());
+            return i;
+        }).toList();
+
+        res.setItems(items);
+        return res;
+    }
+
 }

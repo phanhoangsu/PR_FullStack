@@ -49,6 +49,7 @@ const serviceSlice = createSlice({
         state.loading = false;
         state.services = action.payload;
       })
+
       .addCase(getServices.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;

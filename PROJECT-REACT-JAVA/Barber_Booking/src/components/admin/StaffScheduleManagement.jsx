@@ -131,7 +131,7 @@ const StaffScheduleManagement = () => {
     <div className="p-6 bg-white rounded-xl shadow-md">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-gray-700">
-          📅 Quản lý lịch làm việc
+          📅 Quản lý lịch làm việc của nhân viên
         </h2>
         <Button type="primary" onClick={handleAdd}>
           ➕ Thêm lịch

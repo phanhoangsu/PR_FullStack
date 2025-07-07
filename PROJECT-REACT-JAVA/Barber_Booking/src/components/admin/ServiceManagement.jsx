@@ -8,6 +8,7 @@ import {
   message,
   Popconfirm,
   Select,
+  Spin,
 } from "antd";
 import {
   PlusOutlined,
@@ -31,7 +32,6 @@ const ServiceManager = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingService, setEditingService] = useState(null);
-
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -39,33 +39,54 @@ const ServiceManager = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setFilteredData(
-      services.filter(
-        (s) =>
-          s.serviceName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          s.type?.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+    const filtered = services.filter(
+      (s) =>
+        s.serviceName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        s.type?.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    setFilteredData(filtered);
   }, [searchTerm, services]);
 
+  // ✅ Mở modal và gán dữ liệu vào form
   const handleOpenModal = (service = null) => {
+    console.log("🧾 Đang mở modal, dữ liệu dịch vụ:", service);
     setEditingService(service);
-    form.setFieldsValue(
-      service || {
-        serviceName: "",
-        description: "",
-        price: "",
-        type: "Single",
-        imageUrl: "",
-        isActive: true,
-      }
-    );
     setIsModalOpen(true);
+
+    setTimeout(() => {
+      if (service) {
+        const initialData = {
+          serviceName: service.serviceName || "",
+          description: service.description || "",
+          price: service.price || 0,
+          type: service.type || "Single",
+          imageUrl: service.imageUrl || "",
+          isActive:
+            typeof service.isActive === "boolean" ? service.isActive : true,
+        };
+        console.log("📋 Dữ liệu set vào form:", initialData);
+        form.setFieldsValue(initialData);
+      } else {
+        form.resetFields();
+        const newData = {
+          serviceName: "",
+          description: "",
+          price: "",
+          type: "Single",
+          imageUrl: "",
+          isActive: true,
+        };
+        console.log("➕ Thêm mới - reset form với:", newData);
+        form.setFieldsValue(newData);
+      }
+    }, 100); // Delay nhẹ đảm bảo form mount xong
   };
 
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
+      console.log("📤 Submit form:", values);
+
       if (editingService) {
         await dispatch(
           editService({ id: editingService.serviceId, data: values })
@@ -75,10 +96,14 @@ const ServiceManager = () => {
         await dispatch(addService(values)).unwrap();
         message.success("Thêm dịch vụ mới thành công!");
       }
+
       setIsModalOpen(false);
+      setEditingService(null);
       form.resetFields();
+      dispatch(getServices());
     } catch (error) {
       message.error("Thao tác thất bại!");
+      console.error("❌ Lỗi khi submit:", error);
     }
   };
 
@@ -86,8 +111,10 @@ const ServiceManager = () => {
     try {
       await dispatch(removeService(id)).unwrap();
       message.success("Xóa dịch vụ thành công!");
-    } catch {
+      dispatch(getServices());
+    } catch (error) {
       message.error("Xóa thất bại!");
+      console.error("❌ Lỗi khi xóa:", error);
     }
   };
 
@@ -112,7 +139,9 @@ const ServiceManager = () => {
       dataIndex: "price",
       key: "price",
       render: (price) => (
-        <span className="text-green-600 font-semibold">{price} đ</span>
+        <span className="text-green-600 font-semibold">
+          {price?.toLocaleString()} đ
+        </span>
       ),
     },
     {
@@ -154,7 +183,10 @@ const ServiceManager = () => {
           <Button
             icon={<EditOutlined />}
             size="small"
-            onClick={() => handleOpenModal(record)}
+            onClick={() => {
+              console.log("🖊️ Click chỉnh sửa:", record);
+              handleOpenModal(record);
+            }}
           />
           <Popconfirm
             title="Bạn có chắc muốn xóa dịch vụ này?"
@@ -190,21 +222,26 @@ const ServiceManager = () => {
         className="max-w-md"
       />
 
-      <Table
-        rowKey="serviceId"
-        dataSource={filteredData}
-        columns={columns}
-        loading={loading}
-        pagination={{ pageSize: 5 }}
-      />
+      <Spin spinning={loading}>
+        <Table
+          rowKey="serviceId"
+          dataSource={filteredData}
+          columns={columns}
+          pagination={{ pageSize: 5 }}
+        />
+      </Spin>
 
       <Modal
         title={editingService ? "Chỉnh sửa dịch vụ" : "Thêm mới dịch vụ"}
         open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
+        onCancel={() => {
+          setIsModalOpen(false);
+          form.resetFields();
+          setEditingService(null);
+        }}
         onOk={handleSubmit}
         okText={editingService ? "Cập nhật" : "Thêm mới"}
-        destroyOnClose
+        forceRender // ✅ giữ form luôn tồn tại để không mất dữ liệu
       >
         <Form form={form} layout="vertical" preserve={false}>
           <Form.Item
@@ -247,7 +284,7 @@ const ServiceManager = () => {
             <Select
               options={[
                 { label: "Đang hoạt động", value: true },
-                { label: "Tạm dừng", value: false },
+                // { label: "Tạm dừng", value: false },
               ]}
             />
           </Form.Item>
@@ -258,3 +295,4 @@ const ServiceManager = () => {
 };
 
 export default ServiceManager;
+// (ĐÂY LÀ GIAO DDIENJ ANTDESIGN)

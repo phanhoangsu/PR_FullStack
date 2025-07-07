@@ -6,6 +6,7 @@ import ServicePage from "./pages/ServicePage";
 import AdminPage from "./pages/AdminPage";
 import BillPages from "./pages/BillPages";
 import CartPage from "./pages/CartPage";
+import AppointmentsModal from "./components/services/AppointmentsModal";
 
 function App() {
   const token = useSelector((state) => state.auth.token);
@@ -19,8 +20,9 @@ function App() {
 
       <Route path="/cart" element={<CartPage />} />
 
-      <Route path="/bill" element={<BillPages />} />
+      {/* <Route path="/bill" element={<BillPages />} /> */}
 
+      <Route path="/bills" element={<AppointmentsModal />} />
       <Route path="/admin" element={<AdminPage />} />
     </Routes>
   );

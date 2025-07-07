@@ -39,16 +39,16 @@ const CartPage = () => {
       AuthService.getRole(token)
         .then((res) => {
           const { fullName, phoneNumber, email } = res.data;
-          console.log("🧑‍💻 [User API Response]:", res.data);
+          // console.log("🧑‍💻 [User API Response]:", res.data);
 
           if (fullName && phoneNumber) {
             form.setFieldsValue({ fullName, phoneNumber, email });
           } else {
-            console.warn(" Không có thông tin user hoặc thiếu trường.");
+            // console.warn(" Không có thông tin user hoặc thiếu trường.");
           }
         })
         .catch((err) => {
-          console.error(" Lỗi lấy thông tin user:", err);
+          // console.error(" Lỗi lấy thông tin user:", err);
         });
     }
   }, [token, form]);

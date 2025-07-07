@@ -374,17 +374,37 @@ const BookingDialog = ({ open, onClose, serviceId, staffId, serviceName }) => {
             <TimePicker format="HH:mm" style={{ width: "100%" }} />
           </Form.Item>
 
-          <Form.Item name="staffId" label="Chọn nhân viên (có thể bỏ trống)">
+          {/* <Form.Item name="staffId" label="Chọn nhân viên (có thể bỏ trống)">
             <Select
               allowClear
               placeholder="-- không chọn để hệ thống chỉ định nhân viên --"
             >
               {Array.isArray(staffs) && staffs.length > 0 ? (
                 staffs.map((staff) => (
-                  <Option key={staff.id} value={staff.id}>
-                    {staff.fullName} ({staff.role})
+                  <Option key={staff.id} value={staff.id}> */}
+          {/* {staff.fullName} ({staff.role}) */}
+          {/* {staff.fullName}
                   </Option>
                 ))
+              ) : (
+                <Option disabled>Không có nhân viên nào</Option>
+              )}
+            </Select>
+          </Form.Item> */}
+
+          <Form.Item name="staffId" label="Chọn nhân viên (có thể bỏ trống)">
+            <Select
+              allowClear
+              placeholder="-- không chọn để hệ thống chỉ định nhân viên --"
+            >
+              {Array.isArray(staffs) && staffs.length > 0 ? (
+                staffs
+                  .filter((staff) => staff.isAvailable) // ✅ lọc nhân viên đang hoạt động
+                  .map((staff) => (
+                    <Option key={staff.id} value={staff.id}>
+                      {staff.fullName}
+                    </Option>
+                  ))
               ) : (
                 <Option disabled>Không có nhân viên nào</Option>
               )}

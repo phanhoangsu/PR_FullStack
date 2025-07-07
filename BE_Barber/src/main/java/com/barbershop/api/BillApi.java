@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/bills")
 @RequiredArgsConstructor
@@ -23,5 +25,11 @@ public class BillApi {
     @PostMapping
     public ResponseEntity<BillResponse> createBill(@RequestBody BillCreateRequest request) {
         return ResponseEntity.ok(billService.createBill(request));
+    }
+
+    // ✅ NEW: Lấy danh sách hóa đơn của khách hàng theo số điện thoại
+    @GetMapping("/by-phone/{phone}")
+    public ResponseEntity<List<BillResponse>> getBillsByPhone(@PathVariable String phone) {
+        return ResponseEntity.ok(billService.getBillsByPhone(phone));
     }
 }

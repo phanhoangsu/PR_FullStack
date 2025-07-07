@@ -42,9 +42,13 @@ public class Bill {
     @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
-    @ColumnDefault("`total_amount`")
-    @Column(name = "final_total", precision = 10, scale = 2)
+//    @ColumnDefault("`total_amount`")
+//    @Column(name = "final_total", precision = 10, scale = 2)
+//    private BigDecimal finalTotal;
+
+    @Column(name = "final_total", insertable = false, updatable = false)
     private BigDecimal finalTotal;
+
 
     @NotNull
     @Lob

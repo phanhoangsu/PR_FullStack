@@ -30,16 +30,7 @@ public class ComboApi {
                 .dataError(Map.of("comboName", request.getName())) // tuỳ bạn
                 .build();
     }
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    @PutMapping("/{id}")
-//    public ErrorMessage  update(@PathVariable Integer id, @RequestBody ComboRequest request) {
-//        var combo = comboService.updateCombo(id, request);
-//        return ErrorMessage.builder()
-//                .errorCode(ComboErrorCode.UPDATE_SUCCESS)
-//                .errorMessage(ErrorMessageLoader.getProperty(ComboErrorCode.UPDATE_SUCCESS))
-//                .dataError(combo)
-//                .build();
-//    }
+
 //@PreAuthorize("hasRole('ROLE_ADMIN')")
 @PutMapping("/{id}")
 public ErrorMessage update(@PathVariable Integer id, @RequestBody ComboRequest request) {

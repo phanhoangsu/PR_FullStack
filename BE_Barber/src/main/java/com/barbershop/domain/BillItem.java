@@ -51,9 +51,13 @@ public class BillItem {
     @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
-    @ColumnDefault("(`quantity` * `unit_price`)")
-    @Column(name = "total_price", precision = 10, scale = 2)
-    private BigDecimal totalPrice;
+//    @ColumnDefault("(`quantity` * `unit_price`)")
+//    @Column(name = "total_price", precision = 10, scale = 2)
+//    private BigDecimal totalPrice;
+@Column(name = "total_price", insertable = false, updatable = false)
+private BigDecimal totalPrice;
+
+
 
     @Lob
     @Column(name = "note")
