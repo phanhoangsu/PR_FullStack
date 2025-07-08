@@ -1,210 +1,181 @@
-// import React, { useState } from "react";
+// import React from "react";
 // import "../../css/style.css";
 
+// const pricesData = [
+//   {
+//     name: "Cắt tóc nam cơ bản",
+//     price: "150.000đ",
+//     description: "Cắt gọn gàng, tạo kiểu nhẹ nhàng phù hợp khuôn mặt.",
+//   },
+//   {
+//     name: "Cắt tóc undercut",
+//     price: "200.000đ",
+//     description: "Phong cách trẻ trung, vuốt keo tạo kiểu.",
+//   },
+//   {
+//     name: "Cạo râu chuyên nghiệp",
+//     price: "120.000đ",
+//     description: "Cạo sạch, tạo dáng râu theo phong cách riêng.",
+//   },
+//   {
+//     name: "Gội đầu thư giãn",
+//     price: "80.000đ",
+//     description: "Gội đầu massage nhẹ nhàng, giảm căng thẳng.",
+//   },
+//   {
+//     name: "Combo cắt tóc & cạo râu",
+//     price: "250.000đ",
+//     description: "Trọn gói cho diện mạo hoàn hảo.",
+//   },
+//   {
+//     name: "Uốn tóc nam",
+//     price: "400.000đ",
+//     description: "Uốn nhẹ tạo độ phồng, phong cách hiện đại.",
+//   },
+//   {
+//     name: "Nhuộm tóc thời trang",
+//     price: "500.000đ",
+//     description: "Nhuộm màu cá tính, nổi bật và bền màu.",
+//   },
+//   {
+//     name: "Hấp tóc phục hồi",
+//     price: "300.000đ",
+//     description: "Phục hồi tóc hư tổn, mềm mượt và chắc khỏe.",
+//   },
+//   {
+//     name: "Massage vai gáy",
+//     price: "100.000đ",
+//     description: "Thư giãn, giảm mỏi cổ vai gáy sau ngày dài.",
+//   },
+// ];
+
 // const PricesSection = () => {
-//   const [showPrices, setShowPrices] = useState(false);
-
 //   return (
-//     <div
-//       className="blockz-element tab-prices size-2 hsize-2"
-//       style={{
-//         padding: "30px",
-//         backgroundColor: "#fff",
-//         borderRadius: "12px",
-//         margin: "20px auto",
-//         maxWidth: "800px",
-//       }}
-//     >
-//       <div className="blockz-element-wrapper with-padding with-big-text">
-//         <div className="blockz-element-content">
-//           <h2
-//             className="blockz-block-title"
-//             style={{
-//               fontStyle: "italic",
-//               color: "#f0a500",
-//               marginBottom: "20px",
-//               borderBottom: "2px solid #f0a500",
-//               paddingBottom: "10px",
-//               fontWeight: "700",
-//             }}
+//     <div className="prices-container">
+//       <h2 className="prices-title">Prices</h2>
+//       <ul style={{ listStyle: "none", padding: 0 }}>
+//         {pricesData.map(({ name, price, description }) => (
+//           <li className="price-item" key={name}>
+//             <div className="price-title">
+//               <div className="price-name">{name}</div>
+//               <div className="price-dots"></div>
+//               <div className="price-price">{price}</div>
+//             </div>
+//             <div className="price-description">{description}</div>
+//           </li>
+//         ))}
+//       </ul>
+//     </div>
+//   );
+// };
+
+// export default PricesSection;
+
+// import React from "react";
+// import "../../css/style.css";
+
+// // Import ảnh gallery từ thư mục assets
+// import img9 from "../../assets/gallery/9.jpg";
+// import img10 from "../../assets/gallery/10.jpg";
+// import img11 from "../../assets/gallery/11.jpg";
+
+// const pricesData = [
+//   {
+//     name: "Cắt tóc nam cơ bản",
+//     price: "150.000đ",
+//     description: "Cắt gọn gàng, tạo kiểu nhẹ nhàng phù hợp khuôn mặt.",
+//   },
+//   {
+//     name: "Cắt tóc undercut",
+//     price: "200.000đ",
+//     description: "Phong cách trẻ trung, vuốt keo tạo kiểu.",
+//   },
+//   {
+//     name: "Cạo râu chuyên nghiệp",
+//     price: "120.000đ",
+//     description: "Cạo sạch, tạo dáng râu theo phong cách riêng.",
+//   },
+//   {
+//     name: "Gội đầu thư giãn",
+//     price: "80.000đ",
+//     description: "Gội đầu massage nhẹ nhàng, giảm căng thẳng.",
+//   },
+//   {
+//     name: "Combo cắt tóc & cạo râu",
+//     price: "250.000đ",
+//     description: "Trọn gói cho diện mạo hoàn hảo.",
+//   },
+//   {
+//     name: "Uốn tóc nam",
+//     price: "400.000đ",
+//     description: "Uốn nhẹ tạo độ phồng, phong cách hiện đại.",
+//   },
+//   {
+//     name: "Nhuộm tóc thời trang",
+//     price: "500.000đ",
+//     description: "Nhuộm màu cá tính, nổi bật và bền màu.",
+//   },
+//   {
+//     name: "Hấp tóc phục hồi",
+//     price: "300.000đ",
+//     description: "Phục hồi tóc hư tổn, mềm mượt và chắc khỏe.",
+//   },
+//   {
+//     name: "Massage vai gáy",
+//     price: "100.000đ",
+//     description: "Thư giãn, giảm mỏi cổ vai gáy sau ngày dài.",
+//   },
+// ];
+
+// const galleryImages = [img9, img10, img11];
+
+// const PricesSection = () => {
+//   return (
+//     <div className="prices-section">
+//       {/* ===== Title ===== */}
+//       <h2 className="prices-title">Bảng giá dịch vụ</h2>
+
+//       {/* ===== Danh sách giá ===== */}
+//       <ul className="prices-list">
+//         {pricesData.map(({ name, price, description }, index) => (
+//           <li className="price-item" key={index}>
+//             <div className="price-title">
+//               <span className="price-name">{name}</span>
+//               <span className="price-dots"></span>
+//               <span className="price-price">{price}</span>
+//             </div>
+//             <div className="price-description">{description}</div>
+//           </li>
+//         ))}
+//       </ul>
+
+//       {/* ===== Hình ảnh Gallery (3 ảnh) ===== */}
+//       <div className="gallery-row">
+//         {galleryImages.map((img, index) => (
+//           <div
+//             className="blockz-element tab-prices tab-gallery size-1 hsize-1"
+//             key={index}
 //           >
-//             Prices
-//           </h2>
-//           <ul
-//             className="blockz-price-list"
-//             style={{ listStyle: "none", padding: 0 }}
-//           >
-//             <li style={{ marginBottom: "20px" }}>
-//               <div
-//                 className="blockz-price-title"
-//                 style={{
-//                   display: "flex",
-//                   justifyContent: "space-between",
-//                   alignItems: "center",
-//                 }}
-//               >
+//             <div className="blockz-element-wrapper">
+//               <div className="blockz-element-content">
 //                 <div
-//                   className="blockz-price-name"
-//                   style={{ fontWeight: "600", fontSize: "18px" }}
+//                   className="blockz-picture"
+//                   style={{ backgroundImage: `url(${img})` }}
 //                 >
-//                   Hair Trim
-//                 </div>
-//                 <div
-//                   className="blockz-price-dots"
-//                   style={{
-//                     flexGrow: 1,
-//                     borderBottom: "1px dotted #ccc",
-//                     margin: "0 10px",
-//                   }}
-//                 ></div>
-//                 <div
-//                   className="blockz-price-price"
-//                   style={{
-//                     fontWeight: "700",
-//                     fontSize: "18px",
-//                     color: "#f0a500",
-//                   }}
-//                 >
-//                   $25
+//                   <a
+//                     href={img}
+//                     className="blockz-picture-mask nivobox"
+//                     data-lightbox-gallery="gallery"
+//                   >
+//                     <div className="blockz-picture-content">
+//                       <i className="fa fa-plus-square-o"></i>
+//                     </div>
+//                   </a>
 //                 </div>
 //               </div>
-//               <div
-//                 className="blockz-price-description"
-//                 style={{ marginTop: "5px", color: "#555" }}
-//               >
-//                 <p>Basic haircut for a fresh look.</p>
-//               </div>
-//             </li>
-
-//             <li style={{ marginBottom: "20px" }}>
-//               <div
-//                 className="blockz-price-title"
-//                 style={{
-//                   display: "flex",
-//                   justifyContent: "space-between",
-//                   alignItems: "center",
-//                 }}
-//               >
-//                 <div
-//                   className="blockz-price-name"
-//                   style={{ fontWeight: "600", fontSize: "18px" }}
-//                 >
-//                   Beard Trim
-//                 </div>
-//                 <div
-//                   className="blockz-price-dots"
-//                   style={{
-//                     flexGrow: 1,
-//                     borderBottom: "1px dotted #ccc",
-//                     margin: "0 10px",
-//                   }}
-//                 ></div>
-//                 <div
-//                   className="blockz-price-price"
-//                   style={{
-//                     fontWeight: "700",
-//                     fontSize: "18px",
-//                     color: "#f0a500",
-//                   }}
-//                 >
-//                   $20
-//                 </div>
-//               </div>
-//               <div
-//                 className="blockz-price-description"
-//                 style={{ marginTop: "5px", color: "#555" }}
-//               >
-//                 <p>Professional beard shaping and trimming.</p>
-//               </div>
-//             </li>
-
-//             <li style={{ marginBottom: "20px" }}>
-//               <div
-//                 className="blockz-price-title"
-//                 style={{
-//                   display: "flex",
-//                   justifyContent: "space-between",
-//                   alignItems: "center",
-//                 }}
-//               >
-//                 <div
-//                   className="blockz-price-name"
-//                   style={{ fontWeight: "600", fontSize: "18px" }}
-//                 >
-//                   Special Beard Treatment
-//                 </div>
-//                 <div
-//                   className="blockz-price-dots"
-//                   style={{
-//                     flexGrow: 1,
-//                     borderBottom: "1px dotted #ccc",
-//                     margin: "0 10px",
-//                   }}
-//                 ></div>
-//                 <div
-//                   className="blockz-price-price"
-//                   style={{
-//                     fontWeight: "700",
-//                     fontSize: "18px",
-//                     color: "#f0a500",
-//                   }}
-//                 >
-//                   $55
-//                 </div>
-//               </div>
-//               <div
-//                 className="blockz-price-description"
-//                 style={{ marginTop: "5px", color: "#555" }}
-//               >
-//                 <p>Deep conditioning and revitalizing treatment.</p>
-//               </div>
-//             </li>
-
-//             <li style={{ marginBottom: "20px" }}>
-//               <div
-//                 className="blockz-price-title"
-//                 style={{
-//                   display: "flex",
-//                   justifyContent: "space-between",
-//                   alignItems: "center",
-//                 }}
-//               >
-//                 <div
-//                   className="blockz-price-name"
-//                   style={{ fontWeight: "600", fontSize: "18px" }}
-//                 >
-//                   Complete Treatment
-//                 </div>
-//                 <div
-//                   className="blockz-price-dots"
-//                   style={{
-//                     flexGrow: 1,
-//                     borderBottom: "1px dotted #ccc",
-//                     margin: "0 10px",
-//                   }}
-//                 ></div>
-//                 <div
-//                   className="blockz-price-price"
-//                   style={{
-//                     fontWeight: "700",
-//                     fontSize: "18px",
-//                     color: "#f0a500",
-//                   }}
-//                 >
-//                   $95
-//                 </div>
-//               </div>
-//               <div
-//                 className="blockz-price-description"
-//                 style={{ marginTop: "5px", color: "#555" }}
-//               >
-//                 <p>Full service package for hair and beard care.</p>
-//               </div>
-//             </li>
-
-//             {/* Bạn có thể thêm các mục giá khác ở đây */}
-//           </ul>
-//         </div>
+//             </div>
+//           </div>
+//         ))}
 //       </div>
 //     </div>
 //   );
@@ -212,63 +183,158 @@
 
 // export default PricesSection;
 
-import React from "react";
+import React, { useState } from "react";
 import "../../css/style.css";
+
+import img9 from "../../assets/gallery/9.jpg";
+import img10 from "../../assets/gallery/10.jpg";
+import img11 from "../../assets/gallery/11.jpg";
 
 const pricesData = [
   {
-    name: "Hair Trim",
-    price: "$25",
-    description: "Basic haircut for a fresh look.",
+    name: "Cắt tóc nam cơ bản",
+    price: "150.000đ",
+    description: "Cắt gọn gàng, tạo kiểu nhẹ nhàng phù hợp khuôn mặt.",
   },
   {
-    name: "Hair Trim",
-    price: "$25",
-    description: "Basic haircut for a fresh look.",
+    name: "Cắt tóc undercut",
+    price: "200.000đ",
+    description: "Phong cách trẻ trung, vuốt keo tạo kiểu.",
   },
   {
-    name: "Hair Trim",
-    price: "$25",
-    description: "Basic haircut for a fresh look.",
+    name: "Cạo râu chuyên nghiệp",
+    price: "120.000đ",
+    description: "Cạo sạch, tạo dáng râu theo phong cách riêng.",
   },
   {
-    name: "Hair Trim",
-    price: "$25",
-    description: "Basic haircut for a fresh look.",
+    name: "Gội đầu thư giãn",
+    price: "80.000đ",
+    description: "Gội đầu massage nhẹ nhàng, giảm căng thẳng.",
   },
   {
-    name: "Beard Trim",
-    price: "$20",
-    description: "Professional beard shaping and trimming.",
+    name: "Combo cắt tóc & cạo râu",
+    price: "250.000đ",
+    description: "Trọn gói cho diện mạo hoàn hảo.",
   },
   {
-    name: "Special Beard Treatment",
-    price: "$55",
-    description: "Deep conditioning and revitalizing treatment.",
+    name: "Uốn tóc nam",
+    price: "400.000đ",
+    description: "Uốn nhẹ tạo độ phồng, phong cách hiện đại.",
   },
   {
-    name: "Complete Treatment",
-    price: "$95",
-    description: "Full service package for hair and beard care.",
+    name: "Nhuộm tóc thời trang",
+    price: "500.000đ",
+    description: "Nhuộm màu cá tính, nổi bật và bền màu.",
+  },
+  {
+    name: "Hấp tóc phục hồi",
+    price: "300.000đ",
+    description: "Phục hồi tóc hư tổn, mềm mượt và chắc khỏe.",
+  },
+  {
+    name: "Massage vai gáy",
+    price: "100.000đ",
+    description: "Thư giãn, giảm mỏi cổ vai gáy sau ngày dài.",
   },
 ];
 
+const galleryImages = [img9, img10, img11];
+
 const PricesSection = () => {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const openLightbox = (index) => {
+    setCurrentIndex(index);
+    setLightboxOpen(true);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+  };
+
+  const prevImage = () => {
+    setCurrentIndex((prev) =>
+      prev === 0 ? galleryImages.length - 1 : prev - 1
+    );
+  };
+
+  const nextImage = () => {
+    setCurrentIndex((prev) =>
+      prev === galleryImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
   return (
-    <div className="prices-container">
-      <h2 className="prices-title">Prices</h2>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {pricesData.map(({ name, price, description }) => (
-          <li className="price-item" key={name}>
-            <div className="price-title">
-              <div className="price-name">{name}</div>
-              <div className="price-dots"></div>
-              <div className="price-price">{price}</div>
+    <div className="prices-section">
+      {/* Bảng giá dịch vụ */}
+      <div className="prices-box">
+        <h2 className="prices-title">Bảng giá dịch vụ</h2>
+        <ul className="prices-list">
+          {pricesData.map(({ name, price, description }, index) => (
+            <li className="price-item" key={index}>
+              <div className="price-title">
+                <span>{name}</span>
+                <span>{price}</span>
+              </div>
+              <div className="price-description">{description}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Gallery ảnh */}
+      <div className="gallery-box">
+        <div
+          className="gallery-top"
+          onClick={() => openLightbox(0)}
+          style={{ backgroundImage: `url(${galleryImages[0]})` }}
+        >
+          <div className="zoom-icon">
+            <i className="fa fa-plus-square-o"></i>
+          </div>
+        </div>
+
+        <div className="gallery-bottom">
+          {galleryImages.slice(1).map((img, index) => (
+            <div
+              key={index}
+              className="gallery-small"
+              onClick={() => openLightbox(index + 1)}
+              style={{ backgroundImage: `url(${img})` }}
+            >
+              <div className="zoom-icon">
+                <i className="fa fa-plus-square-o"></i>
+              </div>
             </div>
-            <div className="price-description">{description}</div>
-          </li>
-        ))}
-      </ul>
+          ))}
+        </div>
+      </div>
+
+      {/* Lightbox hiển thị ảnh to */}
+      {lightboxOpen && (
+        <div className="lightbox-overlay" onClick={closeLightbox}>
+          <div
+            className="lightbox-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={galleryImages[currentIndex]}
+              alt="Gallery"
+              className="lightbox-image"
+            />
+            <button className="lightbox-close" onClick={closeLightbox}>
+              &times;
+            </button>
+            <button className="lightbox-prev" onClick={prevImage}>
+              &#10094;
+            </button>
+            <button className="lightbox-next" onClick={nextImage}>
+              &#10095;
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
