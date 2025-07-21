@@ -19,7 +19,4 @@ public class ServiceRequest {
     private String imageUrl;
     private ServiceType type;
 
-
-//    private Boolean isActive; // ✅ Thêm dòng này để nhận trạng thái
-
 }

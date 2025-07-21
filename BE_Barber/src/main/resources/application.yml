@@ -45,7 +45,8 @@ spring:
 
 green:
   jwt:
-    expiration: ${GREEN_JWT_EXPIRATION:6000000}
+
+    expiration: ${GREEN_JWT_EXPIRATION:6000000} #    100 phut
     secretKey: ${GREEN_JWT_SECRET_KEY:GREENACADEMY_SECRET_KEY}
 
 server:

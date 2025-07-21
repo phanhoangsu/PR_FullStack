@@ -322,6 +322,8 @@ import ServiceDetails from "./ServiceDetails";
 import { useNavigate } from "react-router-dom";
 import { Button, message } from "antd";
 import ImgBody from "../../assets/body-bg.jpg";
+import ComboList from "./ComboList";
+import SingleServiceList from "./SingleServiceList";
 
 const ServicesList = () => {
   const dispatch = useDispatch();
@@ -335,6 +337,13 @@ const ServicesList = () => {
     error: productError,
   } = useSelector((state) => state.product);
   const { token, user } = useSelector((state) => state.auth); // ✅ Lấy user tại đây
+
+  useEffect(() => {
+    console.log("🧾 Danh sách dịch vụ:", services);
+    services.forEach((s) =>
+      console.log("🖼️ Hiển thị:", s.serviceName, "→", s.imageUrl)
+    );
+  }, [services]);
 
   // State nội bộ
   const [selectedService, setSelectedService] = useState(null);
@@ -414,10 +423,10 @@ const ServicesList = () => {
         </button>
       </div>
 
-      <h2 className="text-center fw-bold text-white">Danh Sách Dịch Vụ</h2>
+      {/* <h2 className="text-center fw-bold text-white">Danh Sách Dịch Vụ</h2>
       <p className="text-center text-light mb-5">
         Khám phá các dịch vụ chuyên nghiệp tại studio
-      </p>
+      </p> */}
 
       {loading ? (
         <p className="text-center text-light">Đang tải dịch vụ...</p>
@@ -427,7 +436,7 @@ const ServicesList = () => {
         <p className="text-center text-muted">Không có dịch vụ nào.</p>
       ) : (
         <>
-          <div className="row g-4">
+          {/* <div className="row g-4">
             {(showAllServices ? services : services.slice(0, 6)).map(
               (service) => (
                 <div key={service.serviceId} className="col-md-3">
@@ -517,9 +526,22 @@ const ServicesList = () => {
                 </div>
               )
             )}
-          </div>
+          </div> */}
 
-          {services.length > 8 && (
+          <SingleServiceList />
+
+          {/* ==== COMBO LIST ==== */}
+          <hr className="my-5" />
+          <h2 className="text-center fw-bold text-white">
+            🎁 Gói Combo Ưu Đãi
+          </h2>
+          <p className="text-center text-light mb-4">
+            Tiết kiệm thời gian & chi phí với các combo dịch vụ đặc biệt!
+          </p>
+
+          <ComboList />
+
+          {/* {services.length > 8 && (
             <div className="text-center mt-4">
               <Button
                 type="link"
@@ -529,7 +551,7 @@ const ServicesList = () => {
                 {showAllServices ? "Thu gọn ▲" : "Xem thêm ▼"}
               </Button>
             </div>
-          )}
+          )} */}
         </>
       )}
 

@@ -12,5 +12,4 @@ public interface ComboItemRepository extends JpaRepository<ComboItem, Integer> {
 
     void deleteAllByCombo_ServiceId(Integer comboServiceId);
 
-    void deleteByCombo_ServiceId(Integer comboServiceId);
 }

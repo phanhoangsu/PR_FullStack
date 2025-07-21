@@ -17,4 +17,6 @@ public class ComboItemResponse {
     private BigDecimal price;
     private Integer quantity;
     private String description;
+    private String imageUrl;
+
 }

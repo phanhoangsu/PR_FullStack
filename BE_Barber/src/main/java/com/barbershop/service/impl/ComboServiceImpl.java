@@ -239,9 +239,12 @@ public class ComboServiceImpl implements ComboService {
             if (newItem.getProduct() != null) {
                 itemResponse.setProductId(newItem.getProduct().getId());
                 itemResponse.setServiceName(newItem.getProduct().getTitle());
+                itemResponse.setImageUrl(newItem.getProduct().getImageUrl());
+
             } else if (newItem.getService() != null) {
                 itemResponse.setServiceId(newItem.getService().getServiceId());
                 itemResponse.setServiceName(newItem.getService().getServiceName());
+                itemResponse.setImageUrl(newItem.getService().getImageUrl());
             }
 
             itemResponses.add(itemResponse);
@@ -292,11 +295,13 @@ public class ComboServiceImpl implements ComboService {
                     if (item.getService() != null) {
                         response.setServiceId(item.getService().getServiceId());
                         response.setServiceName(item.getService().getServiceName());
-
+                        response.setImageUrl(item.getService().getImageUrl());
                     } else if (item.getProduct() != null) {
                         response.setProductId(item.getProduct().getId());
                         response.setServiceName(item.getProduct().getTitle());
+                        response.setImageUrl(item.getProduct().getImageUrl());
                     }
+
 
                     return response;
                 })
@@ -327,9 +332,11 @@ public class ComboServiceImpl implements ComboService {
                 if (item.getService() != null) {
                     response.setServiceId(item.getService().getServiceId());
                     response.setServiceName(item.getService().getServiceName());
+                    response.setImageUrl(item.getService().getImageUrl());
                 } else if (item.getProduct() != null) {
                     response.setProductId(item.getProduct().getId());
                     response.setServiceName(item.getProduct().getTitle());
+                    response.setImageUrl(item.getProduct().getImageUrl());
                 }
 
                 return response;
@@ -360,9 +367,11 @@ public class ComboServiceImpl implements ComboService {
                 if (item.getService() != null) {
                     response.setServiceId(item.getService().getServiceId());
                     response.setServiceName(item.getService().getServiceName());
+                    response.setImageUrl(item.getService().getImageUrl());
                 } else if (item.getProduct() != null) {
                     response.setProductId(item.getProduct().getId());
                     response.setServiceName(item.getProduct().getTitle());
+                    response.setImageUrl(item.getProduct().getImageUrl());
                 }
 
                 return response;

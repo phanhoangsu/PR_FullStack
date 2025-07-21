@@ -46,11 +46,23 @@ public class CustomerApi {
     }
 
     // Cập nhật thông tin khách hàng
+//    @PutMapping("/{phoneNumber}")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CUSTOMER')")
+//    public ResponseEntity<CustomerResponse> updateCustomer(@PathVariable String phoneNumber, @Valid @RequestBody CustomerRequest request) {
+//        CustomerResponse response = customerSevice.update(phoneNumber, request);
+//        return buildResponse(response);
+//    }
+
     @PutMapping("/{phoneNumber}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<CustomerResponse> updateCustomer(@PathVariable String phoneNumber, @Valid @RequestBody CustomerRequest request) {
-        CustomerResponse response = customerSevice.update(phoneNumber, request);
-        return buildResponse(response);
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CUSTOMER')")
+    public ResponseEntity<?> updateCustomer(@PathVariable String phoneNumber, @RequestBody CustomerRequest request) {
+        try {
+            customerSevice.update(phoneNumber, request);
+            return ResponseEntity.ok("Cập nhật thành công");
+        } catch (com.barbershop.exception.BarberException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+
+        }
     }
 
     // Xóa khách hàng

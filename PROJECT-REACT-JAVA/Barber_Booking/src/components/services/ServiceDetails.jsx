@@ -165,15 +165,25 @@ const ServiceDetails = ({ service, open, onClose }) => {
     >
       <div className="space-y-6">
         {/* Hình ảnh dịch vụ */}
+        <span className="absolute top-2 left-2 bg-warning px-3 py-1 text-sm font-semibold text-dark rounded shadow">
+          {serviceDetails.type}
+        </span>
+
         <div className="relative mb-4">
           <img
             src={serviceDetails.imageUrl}
             alt={serviceDetails.serviceName}
-            className="w-full h-[250px] object-cover rounded"
+            className="block w-full max-w-full h-auto rounded"
+            style={{
+              display: "block",
+              width: "100%",
+              height: "auto",
+              borderRadius: 8,
+            }}
           />
-          <span className="absolute top-2 left-2 bg-warning px-3 py-1 text-sm font-semibold text-dark rounded shadow">
+          {/* <span className="absolute top-2 left-2 bg-warning px-3 py-1 text-sm font-semibold text-dark rounded shadow">
             {serviceDetails.type}
-          </span>
+          </span> */}
         </div>
 
         {/* Mô tả */}

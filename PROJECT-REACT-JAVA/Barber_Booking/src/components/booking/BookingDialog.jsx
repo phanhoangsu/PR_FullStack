@@ -245,7 +245,7 @@ const BookingDialog = ({ open, onClose, serviceId, staffId, serviceName }) => {
           form.setFieldsValue({ fullName, phoneNumber, email });
         })
         .catch(() => {
-          message.error("Không lấy được thông tin người dùng");
+          // message.error("Không lấy được thông tin người dùng");
         });
     }
   }, [open, token, form]);

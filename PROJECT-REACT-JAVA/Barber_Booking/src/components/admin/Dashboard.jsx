@@ -200,7 +200,7 @@ export default function Dashboard() {
           <h3 className="text-lg font-semibold mb-4 text-gray-700">
             Quick Actions
           </h3>
-          <div className="space-y-3">
+          {/* <div className="space-y-3">
             <button className="w-full bg-blue-500 text-white py-2 rounded-lg font-medium hover:bg-blue-600 transition">
               Add New Staff
             </button>
@@ -213,7 +213,7 @@ export default function Dashboard() {
             <button className="w-full bg-orange-500 text-white py-2 rounded-lg font-medium hover:bg-orange-600 transition">
               Schedule Staff
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
