@@ -14,6 +14,7 @@ public class AppointmentRequest {
     private String phoneNumber;
     private String fullName;
 
+    private Integer comboId;
     private Integer serviceId;
     private Integer staffId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

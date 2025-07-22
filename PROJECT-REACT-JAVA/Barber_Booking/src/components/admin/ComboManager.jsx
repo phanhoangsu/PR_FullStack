@@ -291,6 +291,7 @@ import {
   deleteCombo,
 } from "../../reduxToolKist/services/comboSlice";
 import { http } from "../../reduxToolKist/api/AxiosInstance";
+import { circIn } from "framer-motion";
 
 const ComboManager = () => {
   const dispatch = useDispatch();
@@ -341,6 +342,7 @@ const ComboManager = () => {
         description: values.description,
         imageUrl,
         items: items.map((item) => ({
+          id: item.id || null, // 👈 thêm id nếu có (update), nếu không là create mới
           serviceId: item.serviceId,
           productId: null,
           quantity: item.quantity,
@@ -350,7 +352,6 @@ const ComboManager = () => {
       };
 
       if (editingCombo) {
-        await http.delete(`/combos/${editingCombo.comboId}`);
         await dispatch(
           updateCombo({ id: editingCombo.comboId, data: payload })
         ).unwrap();
@@ -382,12 +383,15 @@ const ComboManager = () => {
   };
 
   const openEditModal = (combo) => {
+    console.log("xem combo trước khi sửa", combo);
+
     form.setFieldsValue({
       name: combo.comboName,
       description: combo.description,
     });
 
     const mappedItems = combo.items.map((i) => ({
+      id: i.id, // 👈 giữ lại id
       serviceId: i.serviceId,
       productId: i.productId,
       quantity: i.quantity,

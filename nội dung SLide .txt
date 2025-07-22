@@ -1,0 +1,113 @@
+`````````````````````````````````````````Dưới đây là phần trình bày ngắn gọn, dễ hiểu về:
+Dự án có những gì
+Luồng trải nghiệm của khách hàng
+Lý do ra đời của dự án
+1. Dự án có những gì?
+Website đặt lịch cắt tóc online dành cho khách hàng và quản lý tiệm.
+Tài khoản khách hàng: Đăng ký, đăng nhập, bảo mật thông tin.
+Đặt lịch cắt tóc: Chọn dịch vụ, chọn thợ, chọn ngày giờ, xác nhận đặt lịch.
+Xem & quản lý lịch hẹn: Xem lịch sử, hủy lịch, cập nhật thông tin cá nhân.
+Tham khảo dịch vụ: Xem bảng giá, các gói combo, thông tin thợ/barber.
+Trang quản trị (dành cho chủ tiệm): Quản lý lịch hẹn, thợ, dịch vụ, khách hàng, thống kê.
+Giao diện hiện đại, dễ sử dụng trên cả máy tính và điện thoại.
+Bảo mật thông tin: Xác thực tài khoản, bảo vệ dữ liệu cá nhân.
+2. Luồng trải nghiệm của khách hàng
+Truy cập website
+⬇️
+Đăng ký/Đăng nhập tài khoản
+⬇️
+Chọn dịch vụ muốn sử dụng (cắt tóc, gội đầu, combo, v.v.)
+⬇️
+Chọn thợ/barber yêu thích
+⬇️
+Chọn ngày và giờ phù hợp
+⬇️
+Xác nhận đặt lịch
+⬇️
+Nhận thông báo xác nhận lịch hẹn
+⬇️
+Đến tiệm đúng giờ, không phải chờ đợi
+⬇️
+Sau khi sử dụng dịch vụ:
+Xem lại lịch sử đặt lịch
+Đánh giá dịch vụ (nếu có)
+Cập nhật thông tin cá nhân khi cần
+3. Tại sao lại có dự án này? (Lý do ra đời)
+Nhu cầu đặt lịch online ngày càng tăng: Khách hàng muốn chủ động chọn thời gian, tránh phải chờ đợi lâu tại tiệm.
+Tiết kiệm thời gian cho cả khách và tiệm: Quản lý lịch hẹn chuyên nghiệp, giảm tình trạng trùng lịch, bỏ lỡ khách.
+Nâng cao trải nghiệm khách hàng: Khách hàng dễ dàng xem dịch vụ, chọn thợ, biết trước giá cả, lịch sử sử dụng dịch vụ.
+Hỗ trợ quản lý tiệm hiệu quả: Chủ tiệm dễ dàng quản lý thợ, dịch vụ, khách hàng, thống kê doanh thu, lịch hẹn.
+Xu hướng chuyển đổi số: Đáp ứng nhu cầu hiện đại hóa ngành dịch vụ, tăng tính cạnh tranh cho tiệm.
+Tóm lại:
+Dự án giúp khách hàng đặt lịch cắt tóc dễ dàng, chủ động, tiết kiệm thời gian và nâng cao chất lượng phục vụ. Đồng thời, giúp tiệm quản lý hiệu quả, chuyên nghiệp hơn.
+
+
+
+
+`````````````````````````````````````Công nghệ sử dụng
+1. ReactJS
+Thư viện xây dựng giao diện người dùng hiện đại, linh hoạt, dễ mở rộng.
+2. Redux Toolkit
+Quản lý trạng thái (state) toàn cục cho ứng dụng, giúp dữ liệu đồng bộ giữa các trang, các thành phần.
+3. Axios
+Thư viện gọi API, giúp frontend giao tiếp với backend để lấy và gửi dữ liệu (đặt lịch, đăng nhập, lấy dịch vụ...).
+4. CSS (App.css, style.css)
+Tùy chỉnh giao diện, tạo phong cách riêng cho website.
+(Nếu có sử dụng thêm TailwindCSS hoặc AntDesign thì bổ sung vào đây.)
+5. Vite
+Công cụ build và phát triển dự án React, giúp khởi động nhanh, tối ưu hiệu suất.
+6. React Router
+Quản lý chuyển trang (route) trong ứng dụng, giúp người dùng di chuyển giữa các trang như Trang chủ, Đặt lịch, Quản lý, v.v.
+7. LocalStorage
+Lưu trữ thông tin đăng nhập, token xác thực trên trình duyệt để duy trì phiên đăng nhập.
+Tóm tắt:
+Dự án sử dụng các công nghệ hiện đại như ReactJS, Redux Toolkit, Axios, CSS, Vite, React Router để xây dựng một website đặt lịch cắt tóc online thân thiện, nhanh, bảo mật và dễ sử dụng cho khách hàng.
+
+
+
+`````````````````````BE 
+. Ngôn ngữ lập trình
+Java
+Dự án backend sử dụng Java, thể hiện qua các file .java và cấu trúc thư mục chuẩn của dự án Java.
+2. Framework & Thư viện Backend
+Spring Boot
+Thể hiện qua file BeBarberApplication.java và cấu trúc các package như config, service, repository, controller (api),...
+Spring Boot giúp phát triển ứng dụng web nhanh chóng, cấu hình tự động, tích hợp nhiều module như Spring Data JPA, Spring Security,...
+Spring Data JPA
+Thể hiện qua các repository như AppointmentRepository, UserRepository,... để thao tác với cơ sở dữ liệu theo mô hình ORM.
+Spring Security
+Thể hiện qua các file như SecurityConfig.java, JwtFilter.java, JwtUtils.java để bảo mật API, xác thực và phân quyền người dùng.
+ModelMapper
+Thể hiện qua file ModelMapperConfig.java để chuyển đổi giữa các entity và DTO.
+3. Cơ sở dữ liệu
+Có sử dụng hệ quản trị cơ sở dữ liệu quan hệ (RDBMS)
+(Thông thường là MySQL, PostgreSQL, hoặc SQL Server, nhưng cần kiểm tra file cấu hình application.yml để xác định chính xác.)
+4. Quản lý dự án & Build
+Maven
+Thể hiện qua các file pom.xml, mvnw, mvnw.cmd để quản lý thư viện, build và chạy dự án.
+5. Quốc tế hóa (i18n)
+Resource Bundle
+Thể hiện qua file message-vn.properties để hỗ trợ đa ngôn ngữ (ở đây là tiếng Việt).
+6. Kiểm thử
+JUnit
+Thể hiện qua thư mục test/java/com/barbershop/BeBarberApplicationTests.java để viết unit test cho ứng dụng.
+Tóm tắt slide:
+Ngôn ngữ: Java
+Framework: Spring Boot, Spring Data JPA, Spring Security
+Thư viện hỗ trợ: ModelMapper
+Cơ sở dữ liệu: (MySQL/PostgreSQL/SQL Server - xác nhận trong file cấu hình)
+Quản lý dự án: Maven
+Quốc tế hóa: Resource Bundle (.properties)
+Kiểm thử: JUnit
+
+
+
+hướng tới tương lai 
+thêm docker 
+cấp quyền 
+
+
+
+
+disble lịch đã có khách hàng book 
+update combo 

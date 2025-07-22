@@ -77,7 +77,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
             boolean isBusy = appointmentRepository.existsByStaffAndStartTime(staff, request.getStartTime());
             if (isBusy) {
-                throw new RuntimeException("Nhân viên đang bận thời gian này: " + request.getStartTime());
+                throw new RuntimeException("Nhân viên " + staff.getFullName() + " đang bận thời gian này: " + request.getStartTime() + ". Vui lòng chọn thời gian khác.");
             }
         }
 

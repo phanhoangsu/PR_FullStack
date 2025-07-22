@@ -20,4 +20,6 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Integer>
     Collection<Object> findByIsActiveTrue();
 
     List<ServiceEntity> findByType( ServiceType type);
+
+    Collection<Object> findByTypeAndIsActive(@NotNull ServiceType type, Boolean isActive);
 }

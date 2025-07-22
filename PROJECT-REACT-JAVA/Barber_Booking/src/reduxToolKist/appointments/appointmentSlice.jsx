@@ -14,7 +14,9 @@ export const bookAppointment = createAsyncThunk(
       return res.data;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Đặt lịch thất bại"
+        err.response?.data?.dataError || // Ưu tiên lấy thông báo chi tiết từ BE
+          err.response?.data?.errorMessage ||
+          "Đặt lịch thất bại"
       );
     }
   }

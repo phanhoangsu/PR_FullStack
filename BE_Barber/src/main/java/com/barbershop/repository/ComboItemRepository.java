@@ -10,6 +10,5 @@ import java.util.List;
 public interface ComboItemRepository extends JpaRepository<ComboItem, Integer> {
     List<ComboItem> findByCombo_ServiceId(Integer comboId);
 
-    void deleteAllByCombo_ServiceId(Integer comboServiceId);
-
+//    void deleteAllByCombo_ServiceId(Integer comboServiceId);
 }

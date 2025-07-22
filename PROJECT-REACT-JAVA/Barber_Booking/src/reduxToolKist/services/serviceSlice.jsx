@@ -47,7 +47,8 @@ const serviceSlice = createSlice({
       })
       .addCase(getServices.fulfilled, (state, action) => {
         state.loading = false;
-        state.services = action.payload;
+        // state.services = action.payload;
+        state.services = action.payload.filter((s) => s.type === "Single");
       })
 
       .addCase(getServices.rejected, (state, action) => {

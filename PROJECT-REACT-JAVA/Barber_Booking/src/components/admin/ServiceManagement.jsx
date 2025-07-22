@@ -49,7 +49,7 @@ const ServiceManager = () => {
 
   // ✅ Mở modal và gán dữ liệu vào form
   const handleOpenModal = (service = null) => {
-    console.log("🧾 Đang mở modal, dữ liệu dịch vụ:", service);
+    // console.log("🧾 Đang mở modal, dữ liệu dịch vụ:", service);
     setEditingService(service);
     setIsModalOpen(true);
 

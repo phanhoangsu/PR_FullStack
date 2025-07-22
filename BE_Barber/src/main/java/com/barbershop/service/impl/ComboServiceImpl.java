@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
@@ -177,35 +177,54 @@ public class ComboServiceImpl implements ComboService {
 //        return ComboErrorCode.UPDATE_SUCCESS;
 //    }
     @Override
+    @Transactional
     public ComboDetailResponse updateCombo(Integer id, ComboRequest request) {
-        // Tìm combo cần cập nhật
+        // Tìm combo hiện tại
         ServiceEntity combo = serviceRepository.findById(id)
                 .filter(s -> s.getType() == ServiceType.Combo)
                 .orElseThrow(() -> new BarberException(ComboErrorCode.NOT_FOUND, "Combo không tồn tại"));
 
-        // Xóa toàn bộ item cũ
-        comboItemRepository.deleteAllByCombo_ServiceId(id);
+        // Cập nhật tên/miêu tả combo nếu có
+        if (request.getName() != null) {
+            combo.setServiceName(request.getName());
+        }
+        if (request.getDescription() != null) {
+            combo.setDescription(request.getDescription());
+        }
+
+        // Lấy toàn bộ ComboItem hiện tại
+        List<ComboItem> existingItems = comboItemRepository.findByCombo_ServiceId(id);
+        Map<Integer, ComboItem> existingItemMap = existingItems.stream()
+                .filter(i -> i.getId() != null)
+                .collect(Collectors.toMap(ComboItem::getId, Function.identity()));
 
         BigDecimal totalPrice = BigDecimal.ZERO;
         List<ComboItemResponse> itemResponses = new ArrayList<>();
+        Set<Integer> updatedItemIds = new HashSet<>();
 
         for (ComboRequest.Item item : request.getItems()) {
-            ComboItem newItem = new ComboItem();
-            newItem.setCombo(combo);
-            newItem.setQuantity(item.getQuantity());
-            newItem.setPrice(item.getPrice());
+            ComboItem comboItem;
+
+            if (item.getId() != null && existingItemMap.containsKey(item.getId())) {
+                comboItem = existingItemMap.get(item.getId()); // Cập nhật item cũ
+            } else {
+                comboItem = new ComboItem(); // Tạo mới
+                comboItem.setCombo(combo);
+            }
+            comboItem.setQuantity(item.getQuantity());
+            comboItem.setPrice(item.getPrice());
+            comboItem.setIsActive(true);
 
             if (item.getProductId() != null) {
                 Product product = productRepository.findById(item.getProductId())
                         .orElseThrow(() -> new BarberException(ProductErrorCode.NOT_FOUND));
-
                 if (product.getStock() == null || product.getStock() < item.getQuantity()) {
                     throw new BarberException(ProductErrorCode.OUT_OF_STOCK,
                             "Sản phẩm '" + product.getTitle() + "' không đủ trong kho");
                 }
-
-                newItem.setProduct(product);
-                newItem.setDescription(item.getDescription() != null
+                comboItem.setProduct(product);
+                comboItem.setService(null);
+                comboItem.setDescription(item.getDescription() != null
                         ? item.getDescription()
                         : product.getDescription());
 
@@ -213,9 +232,9 @@ public class ComboServiceImpl implements ComboService {
                 ServiceEntity service = serviceRepository.findById(item.getServiceId())
                         .filter(ServiceEntity::getIsActive)
                         .orElseThrow(() -> new BarberException(ComboErrorCode.CONTAINS_DISABLED_ITEM));
-
-                newItem.setService(service);
-                newItem.setDescription(item.getDescription() != null
+                comboItem.setService(service);
+                comboItem.setProduct(null);
+                comboItem.setDescription(item.getDescription() != null
                         ? item.getDescription()
                         : service.getDescription());
 
@@ -223,41 +242,50 @@ public class ComboServiceImpl implements ComboService {
                 throw new BarberException(ComboErrorCode.INVALID_DATA, "Item phải có serviceId hoặc productId");
             }
 
-            // Lưu item
-            comboItemRepository.save(newItem);
-
-            // Tính tổng tiền
-            totalPrice = totalPrice.add(newItem.getPrice().multiply(BigDecimal.valueOf(newItem.getQuantity())));
-
-            // Chuẩn bị phản hồi
-            ComboItemResponse itemResponse = new ComboItemResponse();
-            itemResponse.setId(newItem.getId());
-            itemResponse.setPrice(newItem.getPrice());
-            itemResponse.setQuantity(newItem.getQuantity());
-            itemResponse.setDescription(newItem.getDescription());
-
-            if (newItem.getProduct() != null) {
-                itemResponse.setProductId(newItem.getProduct().getId());
-                itemResponse.setServiceName(newItem.getProduct().getTitle());
-                itemResponse.setImageUrl(newItem.getProduct().getImageUrl());
-
-            } else if (newItem.getService() != null) {
-                itemResponse.setServiceId(newItem.getService().getServiceId());
-                itemResponse.setServiceName(newItem.getService().getServiceName());
-                itemResponse.setImageUrl(newItem.getService().getImageUrl());
+            comboItemRepository.save(comboItem);
+            if (comboItem.getId() != null) {
+                updatedItemIds.add(comboItem.getId());
             }
 
-            itemResponses.add(itemResponse);
+            // Cộng vào tổng giá
+            totalPrice = totalPrice.add(comboItem.getPrice().multiply(BigDecimal.valueOf(comboItem.getQuantity())));
+
+            // Chuẩn bị phản hồi
+            ComboItemResponse response = new ComboItemResponse();
+            response.setId(comboItem.getId());
+            response.setPrice(comboItem.getPrice());
+            response.setQuantity(comboItem.getQuantity());
+            response.setDescription(comboItem.getDescription());
+
+            if (comboItem.getProduct() != null) {
+                response.setProductId(comboItem.getProduct().getId());
+                response.setServiceName(comboItem.getProduct().getTitle());
+                response.setImageUrl(comboItem.getProduct().getImageUrl());
+            } else if (comboItem.getService() != null) {
+                response.setServiceId(comboItem.getService().getServiceId());
+                response.setServiceName(comboItem.getService().getServiceName());
+                response.setImageUrl(comboItem.getService().getImageUrl());
+            }
+
+            itemResponses.add(response);
         }
+
+//        // Soft delete những item không còn trong request
+//        for (ComboItem oldItem : existingItems) {
+//            if (!updatedItemIds.contains(oldItem.getId())) {
+//                oldItem.setIsActive(false);
+//                comboItemRepository.save(oldItem);
+//            }
+//        }
 
         // Cập nhật combo
         combo.setPrice(totalPrice);
         combo.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         serviceRepository.save(combo);
 
-        // Trả về thông tin chi tiết combo sau khi cập nhật
         return new ComboDetailResponse(combo.getServiceId(), combo.getServiceName(), itemResponses, totalPrice);
     }
+
 
     @Override
     public void softDeleteCombo(Integer id) {

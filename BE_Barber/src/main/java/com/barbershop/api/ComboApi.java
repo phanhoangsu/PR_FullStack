@@ -20,10 +20,10 @@ import java.util.Map;
 public class ComboApi {
     private final ComboService comboService;
 
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
-    public ErrorMessage  create(@RequestBody ComboRequest request) {
-        String resultCode  = comboService.createCombo(request);
+    public ErrorMessage create(@RequestBody ComboRequest request) {
+        String resultCode = comboService.createCombo(request);
         return ErrorMessage.builder()
                 .errorCode(resultCode)
                 .errorMessage(ErrorMessageLoader.getProperty(resultCode))
@@ -46,7 +46,7 @@ public ErrorMessage update(@PathVariable Integer id, @RequestBody ComboRequest r
 
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
-    public ErrorMessage  delete(@PathVariable Integer id) {
+    public ErrorMessage delete(@PathVariable Integer id) {
         comboService.softDeleteCombo(id);
         return ErrorMessage.builder()
                 .errorCode(ComboErrorCode.DELETE_SUCCESS)
@@ -55,12 +55,12 @@ public ErrorMessage update(@PathVariable Integer id, @RequestBody ComboRequest r
     }
 
     @GetMapping("/{id}")
-    public ComboDetailResponse   getDetails(@PathVariable Integer id) {
+    public ComboDetailResponse getDetails(@PathVariable Integer id) {
         return comboService.getComboDetails(id);
     }
 
     @GetMapping
-    public  List<ComboDetailResponse>  getAllActiveCombos() {
+    public List<ComboDetailResponse> getAllActiveCombos() {
         return comboService.getAllActiveCombos();
     }
 
